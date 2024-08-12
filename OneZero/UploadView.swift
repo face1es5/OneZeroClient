@@ -10,18 +10,19 @@ import UniformTypeIdentifiers
 import AVFoundation
 
 struct VideoThumbView: View {
+    @State var thumbnail: Image? = nil
+    @State var fetching = true      // fetching thumbnail
+    @State var uploading = false    // uploading to server
     let url: URL
     
-    init(from url: String) {
-        self.url = URL(fileURLWithPath: url)
+    init(from path: String) {
+        url = URL(fileURLWithPath: path)
     }
     
-    init(from url: URL) {
-        self.url = url
+    init(from path: URL) {
+        url = path
     }
-    
-    @State var thumbnail: Image? = nil
-    @State var fetching = true
+
     var body: some View {
         VStack {
             if fetching {
@@ -76,8 +77,9 @@ struct VideoThumbView: View {
 
 struct UploadView: View {
     @State var files: [URL] = []
+    @State private var selectedItems: Set<URL> = []
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(spacing: 10) {
             HStack {
                 Text("choose files:")
                 Button(action: {    // select files.
@@ -94,10 +96,19 @@ struct UploadView: View {
                 }
             }
             Text("Selected files: ")
-            ScrollView(showsIndicators: false) {
-                HStack(spacing: 10) {
+            ScrollView(.horizontal) {
+                LazyHStack(spacing: 10) {
                     ForEach($files, id:\.self) { $url in
                         VideoThumbView(from: url)
+                            .background( selectedItems.contains(url) ? Color.accentColor : .clear)
+                            .cornerRadius(15)
+                            .onTapGesture {
+                                if selectedItems.contains(url) {
+                                    selectedItems.remove(url)
+                                } else {
+                                    selectedItems.insert(url)
+                                }
+                            }
                     }
                 }
             }
@@ -113,11 +124,21 @@ struct UploadView: View {
             }) {
                 Label("upload videos.", systemImage: "square.and.arrow.up")
             }
+            .disabled((selectedItems.count > 0) ? false: true)
         }
     }
     
     func upload() {
         print("Uploading in thread: \(Thread.current)")
+        print("Selected items:")
+        if selectedItems.count > 0 {
+            for url in selectedItems {
+                print(url.lastPathComponent)
+            }
+        } else {
+            print("No video selected. Cancel uploading.")
+        }
+
     }
 }
 
