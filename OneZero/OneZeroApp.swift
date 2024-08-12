@@ -11,7 +11,7 @@ import SwiftUI
 struct OneZeroApp: App {
     var body: some Scene {
         WindowGroup {
-            EmptyView()
+            UploadView()
         }
     }
 }

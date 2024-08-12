@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CF3F6A372C67AA65007079E8 /* UploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3F6A362C67AA65007079E8 /* UploadView.swift */; };
+		CF3F6A392C67AC6B007079E8 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3F6A382C67AC6B007079E8 /* GalleryView.swift */; };
 		CFDD8D752C64FA1A0048D9F5 /* OneZeroApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFDD8D742C64FA1A0048D9F5 /* OneZeroApp.swift */; };
 		CFDD8D792C64FA1B0048D9F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFDD8D782C64FA1B0048D9F5 /* Assets.xcassets */; };
 		CFDD8D7C2C64FA1B0048D9F5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFDD8D7B2C64FA1B0048D9F5 /* Preview Assets.xcassets */; };
@@ -14,6 +16,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CF3F6A362C67AA65007079E8 /* UploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadView.swift; sourceTree = "<group>"; };
+		CF3F6A382C67AC6B007079E8 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
 		CFDD8D712C64FA1A0048D9F5 /* OneZero.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OneZero.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFDD8D742C64FA1A0048D9F5 /* OneZeroApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneZeroApp.swift; sourceTree = "<group>"; };
 		CFDD8D782C64FA1B0048D9F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -54,7 +58,9 @@
 			isa = PBXGroup;
 			children = (
 				CFDD8D742C64FA1A0048D9F5 /* OneZeroApp.swift */,
+				CF3F6A382C67AC6B007079E8 /* GalleryView.swift */,
 				CFDD8D782C64FA1B0048D9F5 /* Assets.xcassets */,
+				CF3F6A362C67AA65007079E8 /* UploadView.swift */,
 				CFDD8D7D2C64FA1B0048D9F5 /* OneZero.entitlements */,
 				CFDD8D7A2C64FA1B0048D9F5 /* Preview Content */,
 			);
@@ -141,6 +147,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CFDD8D752C64FA1A0048D9F5 /* OneZeroApp.swift in Sources */,
+				CF3F6A392C67AC6B007079E8 /* GalleryView.swift in Sources */,
+				CF3F6A372C67AA65007079E8 /* UploadView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,11 +205,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -251,10 +260,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
@@ -275,15 +285,21 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Paramecium.OneZero;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -302,15 +318,21 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Paramecium.OneZero;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
