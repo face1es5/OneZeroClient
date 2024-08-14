@@ -11,6 +11,7 @@
 		CF3F6A392C67AC6B007079E8 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3F6A382C67AC6B007079E8 /* GalleryView.swift */; };
 		CF4449052C6B53DE00191EF1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4449042C6B53DE00191EF1 /* ContentView.swift */; };
 		CF4449072C6B63B900191EF1 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4449062C6B63B900191EF1 /* Settings.swift */; };
+		CF44EB932C6D16E9008F461E /* SelectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF44EB922C6D16E9008F461E /* SelectionModel.swift */; };
 		CF68C29F2C6C885A00FF05BF /* VideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF68C29E2C6C885A00FF05BF /* VideoViewModel.swift */; };
 		CF68C2A12C6C890D00FF05BF /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF68C2A02C6C890D00FF05BF /* VideoItem.swift */; };
 		CFDD8D752C64FA1A0048D9F5 /* OneZeroApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFDD8D742C64FA1A0048D9F5 /* OneZeroApp.swift */; };
@@ -28,6 +29,7 @@
 		CF4449042C6B53DE00191EF1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		CF4449062C6B63B900191EF1 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		CF44EB912C6CEED8008F461E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CF44EB922C6D16E9008F461E /* SelectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionModel.swift; sourceTree = "<group>"; };
 		CF68C29E2C6C885A00FF05BF /* VideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewModel.swift; sourceTree = "<group>"; };
 		CF68C2A02C6C890D00FF05BF /* VideoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoItem.swift; sourceTree = "<group>"; };
 		CFDD8D712C64FA1A0048D9F5 /* OneZero.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OneZero.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,6 +103,7 @@
 			children = (
 				CF68C29E2C6C885A00FF05BF /* VideoViewModel.swift */,
 				CF68C2A02C6C890D00FF05BF /* VideoItem.swift */,
+				CF44EB922C6D16E9008F461E /* SelectionModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -182,6 +185,7 @@
 				CF4449052C6B53DE00191EF1 /* ContentView.swift in Sources */,
 				CF68C29F2C6C885A00FF05BF /* VideoViewModel.swift in Sources */,
 				CFE290D02C6C857000CA3B25 /* VideoThumbView.swift in Sources */,
+				CF44EB932C6D16E9008F461E /* SelectionModel.swift in Sources */,
 				CF3F6A372C67AA65007079E8 /* UploadView.swift in Sources */,
 				CFE12C2A2C6BC08300966529 /* APIService.swift in Sources */,
 				CF4449072C6B63B900191EF1 /* Settings.swift in Sources */,

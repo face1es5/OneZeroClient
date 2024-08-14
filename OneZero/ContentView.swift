@@ -18,9 +18,9 @@ struct ContentView: View {
         SidebarMenuItem(name: "Upload", icon: "icloud.and.arrow.up"),
         SidebarMenuItem(name: "Gallery", icon: "photo.on.rectangle.angled"),
     ]
-    
+
     @State var selectedView: SidebarMenuItem?
-    
+
     var body: some View {
         NavigationSplitView {
             VStack {
@@ -44,7 +44,7 @@ struct ContentView: View {
         } detail: {
             if let selectedView {
                 switch selectedView.name {
-                case "Upload" :
+                case "Upload":
                     UploadView()
                 case "Gallery":
                     GalleryView()

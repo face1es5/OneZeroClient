@@ -5,8 +5,8 @@
 //  Created by Fish on 14/8/2024.
 //
 
-import SwiftUI
 import AVFoundation
+import SwiftUI
 
 struct VideoThumbView: View {
     @ObservedObject var video: VideoItem
@@ -16,13 +16,11 @@ struct VideoThumbView: View {
         ZStack(alignment: .center) {
             if video.uploading {
                 ProgressView()
-                    .frame(width: 100, height: 100)
                     .zIndex(1)
             }
-            VStack {
+            VStack(spacing: 10) {
                 if video.loadingThumb {
                     ProgressView()
-                        .frame(width: 200, height: 200)
                 } else if thumbnail != nil {
                     VStack {
                         thumbnail!
@@ -32,8 +30,6 @@ struct VideoThumbView: View {
                             .blur(radius: video.uploading ? 10 : 0)
                     }
                     .border(Color(NSColor.lightGray), width: 2)
-                    .frame(width: 200, height: 200)
-
                 } else {
                     Button(action: genThumbnail) {
                         Image(systemName: "arrow.clockwise")
@@ -42,15 +38,15 @@ struct VideoThumbView: View {
                             .frame(width: 50, height: 50)
                     }
                     .buttonStyle(PlainButtonStyle())
-                    .frame(width: 200, height: 200)
                 }
-                Text(video.name).frame(maxWidth: 200)
+                Text(video.name)
             }
             .padding()
             .task {
                 genThumbnail()
             }
         }
+        .frame(maxWidth: 200, maxHeight: 200)
     }
 
     func genThumbnail() {
@@ -76,7 +72,6 @@ struct VideoThumbView: View {
         }
     }
 }
-
 
 struct TestThumbView: View {
     @State var video = VideoItem(from: "file:///Users/fish/Desktop/sample.mp4")

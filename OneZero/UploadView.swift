@@ -9,34 +9,12 @@ import AVFoundation
 import SwiftUI
 import UniformTypeIdentifiers
 
-class SelectionModel<T:Hashable>: ObservableObject, Sequence {
-    @Published var selectedItems: Set<T> = []
-    
-    var count: Int {
-        selectedItems.count
-    }
-    
-    func makeIterator() -> Set<T>.Iterator {
-        return selectedItems.makeIterator()
-    }
-    
-    func contains(_ item: T) -> Bool {
-        return selectedItems.contains(item)
-    }
-    func remove(_ item: T) {
-        selectedItems.remove(item)
-    }
-    func insert(_ item: T) {
-        selectedItems.insert(item)
-    }
-}
-
 struct VideoGalleryView: View {
     @EnvironmentObject var videoItems: VideoViewModel
     @EnvironmentObject private var selectionModel: SelectionModel<VideoItem>
     var body: some View {
-        ScrollView(.horizontal) {
-            LazyHStack(spacing: 10) {
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 200))], spacing: 20) {
                 ForEach(videoItems.videos) { video in
                     VideoThumbView(video: video)
                         .background(selectionModel.contains(video) ? Color.accentColor : .clear)
@@ -47,7 +25,9 @@ struct VideoGalleryView: View {
                         }
                 }
             }
+            .padding(.horizontal)
         }
+        .frame(maxHeight: .infinity)
     }
 }
 
@@ -57,9 +37,15 @@ struct UploadView: View {
     @ObservedObject private var selectionModel: SelectionModel = SelectionModel<VideoItem>()
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text("choose files:")
+        VStack {
+            VideoGalleryView()
+        }
+        .environmentObject(videoItems)
+        .environmentObject(selectionModel)
+        .navigationTitle("Upload videos")
+        .padding()
+        .toolbar {
+            ToolbarItemGroup {
                 Button(action: { // select files.
                     let panel = NSOpenPanel()
                     panel.allowsMultipleSelection = true
@@ -70,24 +56,17 @@ struct UploadView: View {
                         videoItems.load(from: panel.urls)
                     }
                 }) {
-                    Image(systemName: "folder")
+                    Image(systemName: "photo.on.rectangle")
                 }
-            }
-            VideoGalleryView()
-        }
-        .environmentObject(videoItems)
-        .environmentObject(selectionModel)
-        .navigationTitle("Upload videos")
-        .padding()
-        .toolbar {
-            Button(action: {
-                Task {
-                    await upload()
+                Button(action: {
+                    Task {
+                        await upload()
+                    }
+                }) {
+                    Image(systemName: "square.and.arrow.up")
                 }
-            }) {
-                Image(systemName: "square.and.arrow.up")
+                .disabled((selectionModel.count > 0) ? false : true)
             }
-            .disabled((selectionModel.count > 0) ? false : true)
         }
     }
 
@@ -102,13 +81,12 @@ struct UploadView: View {
         print("Ready to post on \(baseURL)")
         await APIService(to: "\(baseURL)/api/upload").postVideo(for: data, name: video.name) { result in
             switch result {
-            case .success(let message):
+            case let .success(message):
                 print("Upload \(video.name) success: \(message).")
-            case .failure(let message):
+            case let .failure(message):
                 print("Upload \(video.name) failed: \(message)")
             }
         }
-        
     }
 
     func upload() async {

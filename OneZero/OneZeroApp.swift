@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 @main
 struct OneZeroApp: App {
     @AppStorage("theme") var theme: AppTheme = .system
@@ -17,9 +16,9 @@ struct OneZeroApp: App {
                 .preferredColorScheme(theme == .system ? .none : (theme == .light ? .light : .dark))
         }
         #if os(macOS)
-        Settings {
-            SettingsView()
-        }
+            Settings {
+                SettingsView()
+            }
         #endif
     }
 }

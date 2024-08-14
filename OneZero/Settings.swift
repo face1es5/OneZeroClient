@@ -21,7 +21,6 @@ struct GeneralSettingsView: View {
             Picker("Appearance:", selection: $theme) {
                 Text("System").tag(AppTheme.system)
                 Text("Light").tag(AppTheme.light)
-                
                 Text("Dark").tag(AppTheme.dark)
             }
             .aspectRatio(contentMode: .fit)
@@ -35,7 +34,7 @@ struct GeneralSettingsView: View {
 struct AdvancedSettingsView: View {
     @AppStorage("useProxy") var useDebugProxy: Bool = false
     @AppStorage("api") var baseURL: String = ""
-    
+
     var body: some View {
         Form {
             Toggle("Use debug proxy", isOn: $useDebugProxy)
