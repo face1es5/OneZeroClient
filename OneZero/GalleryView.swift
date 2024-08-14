@@ -9,7 +9,10 @@ import SwiftUI
 
 struct GalleryView: View {
     var body: some View {
-        Text("This is fucking gallery...")
+        VStack {
+            Text("This is fucking gallery...")
+        }
+        .navigationTitle("Gallery")
     }
 }
 

@@ -10,22 +10,34 @@
 		CF3F6A372C67AA65007079E8 /* UploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3F6A362C67AA65007079E8 /* UploadView.swift */; };
 		CF3F6A392C67AC6B007079E8 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3F6A382C67AC6B007079E8 /* GalleryView.swift */; };
 		CF4449052C6B53DE00191EF1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4449042C6B53DE00191EF1 /* ContentView.swift */; };
+		CF4449072C6B63B900191EF1 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4449062C6B63B900191EF1 /* Settings.swift */; };
+		CF68C29F2C6C885A00FF05BF /* VideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF68C29E2C6C885A00FF05BF /* VideoViewModel.swift */; };
+		CF68C2A12C6C890D00FF05BF /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF68C2A02C6C890D00FF05BF /* VideoItem.swift */; };
 		CFDD8D752C64FA1A0048D9F5 /* OneZeroApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFDD8D742C64FA1A0048D9F5 /* OneZeroApp.swift */; };
 		CFDD8D792C64FA1B0048D9F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFDD8D782C64FA1B0048D9F5 /* Assets.xcassets */; };
 		CFDD8D7C2C64FA1B0048D9F5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFDD8D7B2C64FA1B0048D9F5 /* Preview Assets.xcassets */; };
 		CFDD8D842C64FA5B0048D9F5 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = CFDD8D832C64FA5B0048D9F5 /* .gitignore */; };
+		CFE12C2A2C6BC08300966529 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE12C292C6BC08300966529 /* APIService.swift */; };
+		CFE290D02C6C857000CA3B25 /* VideoThumbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE290CF2C6C857000CA3B25 /* VideoThumbView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CF1CF3942C6C720B00D689D0 /* OneZeroDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneZeroDebug.entitlements; sourceTree = "<group>"; };
 		CF3F6A362C67AA65007079E8 /* UploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadView.swift; sourceTree = "<group>"; };
 		CF3F6A382C67AC6B007079E8 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
 		CF4449042C6B53DE00191EF1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CF4449062C6B63B900191EF1 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		CF44EB912C6CEED8008F461E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CF68C29E2C6C885A00FF05BF /* VideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewModel.swift; sourceTree = "<group>"; };
+		CF68C2A02C6C890D00FF05BF /* VideoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoItem.swift; sourceTree = "<group>"; };
 		CFDD8D712C64FA1A0048D9F5 /* OneZero.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OneZero.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFDD8D742C64FA1A0048D9F5 /* OneZeroApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneZeroApp.swift; sourceTree = "<group>"; };
 		CFDD8D782C64FA1B0048D9F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CFDD8D7B2C64FA1B0048D9F5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CFDD8D7D2C64FA1B0048D9F5 /* OneZero.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneZero.entitlements; sourceTree = "<group>"; };
 		CFDD8D832C64FA5B0048D9F5 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		CFE12C292C6BC08300966529 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		CFE290CF2C6C857000CA3B25 /* VideoThumbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoThumbView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,13 +71,19 @@
 		CFDD8D732C64FA1A0048D9F5 /* OneZero */ = {
 			isa = PBXGroup;
 			children = (
+				CF44EB912C6CEED8008F461E /* Info.plist */,
+				CF1CF3942C6C720B00D689D0 /* OneZeroDebug.entitlements */,
+				CFDD8D7D2C64FA1B0048D9F5 /* OneZero.entitlements */,
+				CFE290D12C6C879500CA3B25 /* Models */,
+				CF4449062C6B63B900191EF1 /* Settings.swift */,
 				CFDD8D742C64FA1A0048D9F5 /* OneZeroApp.swift */,
 				CF3F6A382C67AC6B007079E8 /* GalleryView.swift */,
+				CFE12C292C6BC08300966529 /* APIService.swift */,
+				CFE290CF2C6C857000CA3B25 /* VideoThumbView.swift */,
 				CF4449042C6B53DE00191EF1 /* ContentView.swift */,
 				CF3F6A362C67AA65007079E8 /* UploadView.swift */,
 				CFDD8D782C64FA1B0048D9F5 /* Assets.xcassets */,
 				CFDD8D7A2C64FA1B0048D9F5 /* Preview Content */,
-				CFDD8D7D2C64FA1B0048D9F5 /* OneZero.entitlements */,
 			);
 			path = OneZero;
 			sourceTree = "<group>";
@@ -76,6 +94,15 @@
 				CFDD8D7B2C64FA1B0048D9F5 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		CFE290D12C6C879500CA3B25 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CF68C29E2C6C885A00FF05BF /* VideoViewModel.swift */,
+				CF68C2A02C6C890D00FF05BF /* VideoItem.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -149,10 +176,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF68C2A12C6C890D00FF05BF /* VideoItem.swift in Sources */,
 				CFDD8D752C64FA1A0048D9F5 /* OneZeroApp.swift in Sources */,
 				CF3F6A392C67AC6B007079E8 /* GalleryView.swift in Sources */,
 				CF4449052C6B53DE00191EF1 /* ContentView.swift in Sources */,
+				CF68C29F2C6C885A00FF05BF /* VideoViewModel.swift in Sources */,
+				CFE290D02C6C857000CA3B25 /* VideoThumbView.swift in Sources */,
 				CF3F6A372C67AA65007079E8 /* UploadView.swift in Sources */,
+				CFE12C2A2C6BC08300966529 /* APIService.swift in Sources */,
+				CF4449072C6B63B900191EF1 /* Settings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,6 +241,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /Applications;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -265,6 +298,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /Applications;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -281,7 +315,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = OneZero/OneZero.entitlements;
+				CODE_SIGN_ENTITLEMENTS = OneZero/OneZeroDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -290,6 +324,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneZero/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -323,6 +358,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneZero/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -338,6 +374,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

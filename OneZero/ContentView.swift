@@ -14,17 +14,18 @@ struct SidebarMenuItem: Identifiable, Hashable {
 }
 
 struct ContentView: View {
-    let siderBarMenus = [
+    let sideBarMenus = [
         SidebarMenuItem(name: "Upload", icon: "icloud.and.arrow.up"),
         SidebarMenuItem(name: "Gallery", icon: "photo.on.rectangle.angled"),
     ]
     
     @State var selectedView: SidebarMenuItem?
+    
     var body: some View {
         NavigationSplitView {
             VStack {
                 List(selection: $selectedView) {
-                    ForEach(siderBarMenus, id: \.self) { menu in
+                    ForEach(sideBarMenus, id: \.self) { menu in
                         HStack(spacing: 20) {
                             Image(systemName: menu.icon)
                                 .resizable()
@@ -36,6 +37,7 @@ struct ContentView: View {
                         .frame(maxHeight: 50)
                     }
                 }
+                .frame(width: 200)
                 .navigationTitle("Sidebar")
             }
 
@@ -49,6 +51,8 @@ struct ContentView: View {
                 default:
                     EmptyView()
                 }
+            } else {
+                GalleryView()
             }
         }
     }
