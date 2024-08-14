@@ -9,11 +9,52 @@ import AVFoundation
 import SwiftUI
 import UniformTypeIdentifiers
 
+class SelectionModel<T:Hashable>: ObservableObject, Sequence {
+    @Published var selectedItems: Set<T> = []
+    
+    var count: Int {
+        selectedItems.count
+    }
+    
+    func makeIterator() -> Set<T>.Iterator {
+        return selectedItems.makeIterator()
+    }
+    
+    func contains(_ item: T) -> Bool {
+        return selectedItems.contains(item)
+    }
+    func remove(_ item: T) {
+        selectedItems.remove(item)
+    }
+    func insert(_ item: T) {
+        selectedItems.insert(item)
+    }
+}
+
+struct VideoGalleryView: View {
+    @EnvironmentObject var videoItems: VideoViewModel
+    @EnvironmentObject private var selectionModel: SelectionModel<VideoItem>
+    var body: some View {
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: 10) {
+                ForEach(videoItems.videos) { video in
+                    VideoThumbView(video: video)
+                        .background(selectionModel.contains(video) ? Color.accentColor : .clear)
+                        .cornerRadius(15)
+                        .onTapGesture {
+                            if selectionModel.contains(video) { selectionModel.remove(video) }
+                            else { selectionModel.insert(video) }
+                        }
+                }
+            }
+        }
+    }
+}
 
 struct UploadView: View {
     @AppStorage("api") var baseURL: String = ""
     @ObservedObject var videoItems: VideoViewModel = VideoViewModel()
-    @State private var selectedItems: Set<VideoItem> = []
+    @ObservedObject private var selectionModel: SelectionModel = SelectionModel<VideoItem>()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -32,21 +73,10 @@ struct UploadView: View {
                     Image(systemName: "folder")
                 }
             }
-            Text("Selected files: ")
-            ScrollView(.horizontal) {
-                LazyHStack(spacing: 10) {
-                    ForEach(videoItems.videos) { video in
-                        VideoThumbView(video: video)
-                            .background(selectedItems.contains(video) ? Color.accentColor : .clear)
-                            .cornerRadius(15)
-                            .onTapGesture {
-                                if selectedItems.contains(video) { selectedItems.remove(video) }
-                                else { selectedItems.insert(video) }
-                            }
-                    }
-                }
-            }
+            VideoGalleryView()
         }
+        .environmentObject(videoItems)
+        .environmentObject(selectionModel)
         .navigationTitle("Upload videos")
         .padding()
         .toolbar {
@@ -57,7 +87,7 @@ struct UploadView: View {
             }) {
                 Image(systemName: "square.and.arrow.up")
             }
-            .disabled((selectedItems.count > 0) ? false : true)
+            .disabled((selectionModel.count > 0) ? false : true)
         }
     }
 
@@ -67,7 +97,6 @@ struct UploadView: View {
         }
         defer { Task { @MainActor in video.uploading = false } }
 
-        // simulate loading data and uploading to server...
         print("Read Data.")
         let data = try Data(contentsOf: video.url)
         print("Ready to post on \(baseURL)")
@@ -83,8 +112,8 @@ struct UploadView: View {
     }
 
     func upload() async {
-        guard selectedItems.count > 0 else { print("No videos selected."); return }
-        for video in selectedItems {
+        guard selectionModel.count > 0 else { print("No videos selected."); return }
+        for video in selectionModel {
             Task {
                 do {
                     try await upload(for: video)
