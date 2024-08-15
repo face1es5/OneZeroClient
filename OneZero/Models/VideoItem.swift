@@ -14,6 +14,7 @@ class VideoItem: Identifiable, Hashable, ObservableObject {
     let url: URL
     let name: String
     var thumbnail: Image? = nil
+    @Published var isSelected: Bool = false
     @Published var loadingThumb: Bool = true
     @Published var uploading: Bool = false
 

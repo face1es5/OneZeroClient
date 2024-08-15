@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  OneZero
+
+  Created by Fish on 15/8/2024.
+  
+*/
+
+"Upload selected videos" = "上传选中的视频";
+"Gallery" = "画廊";
+"Gallery_title" = "画廊集";
+"Administrator" = "管理员";
+"Upload" = "上传";
+"Upload videos" = "上传视频";
+"Select videos to upload" = "选择要上传的视频";

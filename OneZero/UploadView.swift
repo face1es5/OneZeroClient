@@ -13,14 +13,16 @@ struct VideoGalleryView: View {
     @EnvironmentObject var selectionModel: SelectionModel<VideoItem>
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 200))], spacing: 20) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 200))], spacing: 10) {
                 ForEach(videosViewModel.videos) { video in
                     VideoThumbView(video: video)
-                        .background(selectionModel.isSelected(video) ? Color.accentColor : .clear)
-                        .cornerRadius(15)
                         .onTapGesture {
-                            if selectionModel.isSelected(video) { selectionModel.deselect(video) }
-                            else { selectionModel.select(video) }
+                            if selectionModel.isSelected(video) {
+                                selectionModel.deselect(video)
+                            } else {
+                                selectionModel.select(video)
+                            }
+                            video.isSelected.toggle()
                         }
                 }
             }
@@ -39,7 +41,6 @@ struct UploadView: View {
             VideoGalleryView()
         }
         .navigationTitle("Upload videos")
-        .padding()
         .toolbar {
             ToolbarItemGroup {
                 Button(action: { // select files.
@@ -53,7 +54,7 @@ struct UploadView: View {
                     }
                 }) {
                     Image(systemName: "photo.on.rectangle")
-                }
+                }.help("Select videos to upload")
                 Button(action: {
                     Task {
                         await upload()
@@ -61,7 +62,13 @@ struct UploadView: View {
                 }) {
                     Image(systemName: "square.and.arrow.up")
                 }
+                .help("Upload selected videos")
                 .disabled((selectionModel.count > 0) ? false : true)
+                Button(action: {
+                    print("right sidebar toggle")
+                }) {
+                    Image(systemName: "sidebar.right")
+                }
             }
         }
     }

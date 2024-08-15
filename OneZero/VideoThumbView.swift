@@ -10,7 +10,6 @@ import SwiftUI
 
 struct VideoThumbView: View {
     @ObservedObject var video: VideoItem
-    @State var thumbnail: Image? = nil
 
     var body: some View {
         ZStack(alignment: .center) {
@@ -33,10 +32,17 @@ struct VideoThumbView: View {
                 video.thumbnail?
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .padding()
                     .blur(radius: video.uploading ? 10 : 0)
-                    .border(Color(NSColor.lightGray), width: 2)
+                    .padding()
+                    .cornerRadius(5)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(video.isSelected ? .gray.opacity(0.5) : Color.clear, lineWidth: 16)
+                    )
                 Text(video.name)
+                    .padding(2)
+                    .cornerRadius(10)
+                    .background(video.isSelected ? .accentColor.opacity(0.5) : Color.clear)
             }
             .padding()
             .task { if video.thumbnail == nil { video.genThumbnail() }}

@@ -14,6 +14,7 @@ struct OneZeroApp: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(theme == .system ? .none : (theme == .light ? .light : .dark))
+                .environment(\.locale, .init(identifier: "zh-Hans"))
         }
         #if os(macOS)
             MenuBarExtra("App Menu Bar Extra", systemImage: "camera.aperture") {

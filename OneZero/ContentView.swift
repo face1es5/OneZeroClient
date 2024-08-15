@@ -27,7 +27,7 @@ struct ContentView: View {
             SidebarMenuItem(name: "Upload", icon: "icloud.and.arrow.up")
         ]),
         SidebarMenuGroups(name: "1990.10.10", menus: [
-            SidebarMenuItem(name: "Gallery", icon: "photo.on.rectangle.angled")
+            SidebarMenuItem(name: "Gallery_title", icon: "photo.on.rectangle.angled")
         ])
     ]
 
@@ -37,9 +37,9 @@ struct ContentView: View {
         NavigationSplitView {
             List(selection: $selectedView) {
                 ForEach(sideBarGroups, id: \.self) { group in
-                    Section(group.name) {
+                    Section(LocalizedStringKey(group.name)) {
                         ForEach(group.menus, id: \.self) { menu in
-                            Label(menu.name, systemImage: menu.icon)
+                            Label(LocalizedStringKey(menu.name), systemImage: menu.icon)
                                 .tag(menu)
                         }
                     }

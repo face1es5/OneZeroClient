@@ -19,6 +19,7 @@
 		CFDD8D7C2C64FA1B0048D9F5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFDD8D7B2C64FA1B0048D9F5 /* Preview Assets.xcassets */; };
 		CFDD8D842C64FA5B0048D9F5 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = CFDD8D832C64FA5B0048D9F5 /* .gitignore */; };
 		CFE12C2A2C6BC08300966529 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE12C292C6BC08300966529 /* APIService.swift */; };
+		CFE227882C6E55350081B1A7 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CFE227862C6E55350081B1A7 /* Localizable.strings */; };
 		CFE290D02C6C857000CA3B25 /* VideoThumbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE290CF2C6C857000CA3B25 /* VideoThumbView.swift */; };
 		CFE688A42C6DB16C0081B70E /* AppStatusMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE688A32C6DB16C0081B70E /* AppStatusMenuView.swift */; };
 		CFE688A72C6DD6B60081B70E /* Uploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE688A62C6DD6B60081B70E /* Uploader.swift */; };
@@ -42,6 +43,7 @@
 		CFDD8D7D2C64FA1B0048D9F5 /* OneZero.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneZero.entitlements; sourceTree = "<group>"; };
 		CFDD8D832C64FA5B0048D9F5 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		CFE12C292C6BC08300966529 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		CFE227872C6E55350081B1A7 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = Localizable.strings; sourceTree = "<group>"; };
 		CFE290CF2C6C857000CA3B25 /* VideoThumbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoThumbView.swift; sourceTree = "<group>"; };
 		CFE688A32C6DB16C0081B70E /* AppStatusMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStatusMenuView.swift; sourceTree = "<group>"; };
 		CFE688A62C6DD6B60081B70E /* Uploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uploader.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 		CFDD8D732C64FA1A0048D9F5 /* OneZero */ = {
 			isa = PBXGroup;
 			children = (
+				CFE227852C6E55190081B1A7 /* zh-Hans.lproj */,
 				CFE688A82C6DF4DD0081B70E /* Extension */,
 				CF44EB912C6CEED8008F461E /* Info.plist */,
 				CF1CF3942C6C720B00D689D0 /* OneZeroDebug.entitlements */,
@@ -104,6 +107,14 @@
 				CFDD8D7B2C64FA1B0048D9F5 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		CFE227852C6E55190081B1A7 /* zh-Hans.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				CFE227862C6E55350081B1A7 /* Localizable.strings */,
+			);
+			path = "zh-Hans.lproj";
 			sourceTree = "<group>";
 		};
 		CFE290D12C6C879500CA3B25 /* Models */ = {
@@ -162,11 +173,12 @@
 			};
 			buildConfigurationList = CFDD8D6C2C64FA190048D9F5 /* Build configuration list for PBXProject "OneZero" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = "zh-Hans";
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = CFDD8D682C64FA190048D9F5;
 			productRefGroup = CFDD8D722C64FA1A0048D9F5 /* Products */;
@@ -184,6 +196,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CFDD8D7C2C64FA1B0048D9F5 /* Preview Assets.xcassets in Resources */,
+				CFE227882C6E55350081B1A7 /* Localizable.strings in Resources */,
 				CFDD8D842C64FA5B0048D9F5 /* .gitignore in Resources */,
 				CFDD8D792C64FA1B0048D9F5 /* Assets.xcassets in Resources */,
 			);
@@ -213,6 +226,17 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		CFE227862C6E55350081B1A7 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CFE227872C6E55350081B1A7 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		CFDD8D7E2C64FA1B0048D9F5 /* Debug */ = {
