@@ -16,6 +16,9 @@ struct OneZeroApp: App {
                 .preferredColorScheme(theme == .system ? .none : (theme == .light ? .light : .dark))
         }
         #if os(macOS)
+            MenuBarExtra("App Menu Bar Extra", systemImage: "camera.aperture") {
+                AppStatusMenuView()
+            }
             Settings {
                 SettingsView()
             }

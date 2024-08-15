@@ -32,7 +32,6 @@ struct VideoGalleryView: View {
 }
 
 struct UploadView: View {
-    @AppStorage("api") var baseURL: String = ""
     @ObservedObject var videoItems: VideoViewModel = VideoViewModel()
     @ObservedObject private var selectionModel: SelectionModel = SelectionModel<VideoItem>()
 
@@ -70,34 +69,11 @@ struct UploadView: View {
         }
     }
 
-    func upload(for video: VideoItem) async throws {
-        await MainActor.run {
-            video.uploading = true
-        }
-        defer { Task { @MainActor in video.uploading = false } }
-
-        print("Read Data.")
-        let data = try Data(contentsOf: video.url)
-        print("Ready to post on \(baseURL)")
-        await APIService(to: "\(baseURL)/api/upload").postVideo(for: data, name: video.name) { result in
-            switch result {
-            case let .success(message):
-                print("Upload \(video.name) success: \(message).")
-            case let .failure(message):
-                print("Upload \(video.name) failed: \(message)")
-            }
-        }
-    }
-
     func upload() async {
         guard selectionModel.count > 0 else { print("No videos selected."); return }
         for video in selectionModel {
             Task {
-                do {
-                    try await upload(for: video)
-                } catch {
-                    print("Error when uploading \(video.name): \(error)")
-                }
+                await Uploader.shared.upload(for: video, to: "api/upload")
             }
         }
     }

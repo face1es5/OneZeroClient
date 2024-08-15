@@ -65,7 +65,7 @@ class APIService {
         var body = Data()
         let mimeType = "video/mp4"
         body.append("--\(boundary)\r\n")
-        body.append("Content-Disposition: form-data; name=\"video\"; filename=\"\(filename)\"\r\n")
+        body.append("Content-Disposition: form-data; name=\"video\"; filename*=UTF-8''\(filename.urlEncode())\r\n")
         body.append("Content-Type: \(mimeType)\r\n")
         body.append("\r\n")
         body.append(videoData)
@@ -126,18 +126,6 @@ enum APIError: Error, LocalizedError {
             return NSLocalizedString("Received data appears to be corrput.", comment: "")
         case let .decodingError(string):
             return string
-        }
-    }
-}
-
-/**
- Extends Data to support append string directly(automately encode string into utf8).
- */
-
-extension Data {
-    mutating func append(_ string: String) {
-        if let data = string.data(using: .utf8) {
-            append(data)
         }
     }
 }
