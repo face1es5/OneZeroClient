@@ -18,15 +18,15 @@ class SelectionModel<T: Hashable>: ObservableObject, Sequence {
         return selectedItems.makeIterator()
     }
 
-    func contains(_ item: T) -> Bool {
+    func isSelected(_ item: T) -> Bool {
         return selectedItems.contains(item)
     }
 
-    func remove(_ item: T) {
+    func deselect(_ item: T) {
         selectedItems.remove(item)
     }
 
-    func insert(_ item: T) {
+    func select(_ item: T) {
         selectedItems.insert(item)
     }
 }

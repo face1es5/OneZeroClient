@@ -1,5 +1,5 @@
 //
-//  VideoModel.swift
+//  VideosViewModel.swift
 //  OneZero
 //
 //  Created by Fish on 14/8/2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class VideoViewModel: ObservableObject {
+class VideosViewModel: ObservableObject {
     @Published var videos: [VideoItem] = []
 
     func load(from urls: [URL]) {

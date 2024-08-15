@@ -5,23 +5,22 @@
 //  Created by Fish on 10/8/2024.
 //
 
-import AVFoundation
 import SwiftUI
 import UniformTypeIdentifiers
 
 struct VideoGalleryView: View {
-    @EnvironmentObject var videoItems: VideoViewModel
-    @EnvironmentObject private var selectionModel: SelectionModel<VideoItem>
+    @EnvironmentObject var videosViewModel: VideosViewModel
+    @EnvironmentObject var selectionModel: SelectionModel<VideoItem>
     var body: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 200))], spacing: 20) {
-                ForEach(videoItems.videos) { video in
+                ForEach(videosViewModel.videos) { video in
                     VideoThumbView(video: video)
-                        .background(selectionModel.contains(video) ? Color.accentColor : .clear)
+                        .background(selectionModel.isSelected(video) ? Color.accentColor : .clear)
                         .cornerRadius(15)
                         .onTapGesture {
-                            if selectionModel.contains(video) { selectionModel.remove(video) }
-                            else { selectionModel.insert(video) }
+                            if selectionModel.isSelected(video) { selectionModel.deselect(video) }
+                            else { selectionModel.select(video) }
                         }
                 }
             }
@@ -32,15 +31,13 @@ struct VideoGalleryView: View {
 }
 
 struct UploadView: View {
-    @ObservedObject var videoItems: VideoViewModel = VideoViewModel()
-    @ObservedObject private var selectionModel: SelectionModel = SelectionModel<VideoItem>()
+    @EnvironmentObject var videosViewModel: VideosViewModel
+    @EnvironmentObject var selectionModel: SelectionModel<VideoItem>
 
     var body: some View {
         VStack {
             VideoGalleryView()
         }
-        .environmentObject(videoItems)
-        .environmentObject(selectionModel)
         .navigationTitle("Upload videos")
         .padding()
         .toolbar {
@@ -52,7 +49,7 @@ struct UploadView: View {
                     panel.canChooseDirectories = false
                     panel.allowedContentTypes = [UTType.video, UTType.movie, UTType.avi]
                     if panel.runModal() == .OK {
-                        videoItems.load(from: panel.urls)
+                        videosViewModel.load(from: panel.urls)
                     }
                 }) {
                     Image(systemName: "photo.on.rectangle")

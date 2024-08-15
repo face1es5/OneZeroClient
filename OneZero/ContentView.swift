@@ -13,34 +13,40 @@ struct SidebarMenuItem: Identifiable, Hashable {
     let icon: String
 }
 
+struct SidebarMenuGroups: Identifiable, Hashable {
+    let id = UUID()
+    let name: String
+    let menus: [SidebarMenuItem]
+}
+
 struct ContentView: View {
-    let sideBarMenus = [
-        SidebarMenuItem(name: "Upload", icon: "icloud.and.arrow.up"),
-        SidebarMenuItem(name: "Gallery", icon: "photo.on.rectangle.angled"),
+    @StateObject var videosViewModel: VideosViewModel = VideosViewModel()
+    @StateObject var selectionModel: SelectionModel<VideoItem> = SelectionModel<VideoItem>()
+    let sideBarGroups = [
+        SidebarMenuGroups(name: "Administrator", menus: [
+            SidebarMenuItem(name: "Upload", icon: "icloud.and.arrow.up")
+        ]),
+        SidebarMenuGroups(name: "1990.10.10", menus: [
+            SidebarMenuItem(name: "Gallery", icon: "photo.on.rectangle.angled")
+        ])
     ]
 
     @State var selectedView: SidebarMenuItem?
 
     var body: some View {
         NavigationSplitView {
-            VStack {
-                List(selection: $selectedView) {
-                    ForEach(sideBarMenus, id: \.self) { menu in
-                        HStack(spacing: 20) {
-                            Image(systemName: menu.icon)
-                                .resizable()
-                                .scaledToFit()
-                            Text(menu.name)
-                                .font(.title3)
+            List(selection: $selectedView) {
+                ForEach(sideBarGroups, id: \.self) { group in
+                    Section(group.name) {
+                        ForEach(group.menus, id: \.self) { menu in
+                            Label(menu.name, systemImage: menu.icon)
+                                .tag(menu)
                         }
-                        .padding()
-                        .frame(maxHeight: 50)
                     }
                 }
-                .frame(width: 200)
-                .navigationTitle("Sidebar")
             }
-
+            .frame(width: 200)
+            .navigationTitle("Sidebar")
         } detail: {
             if let selectedView {
                 switch selectedView.name {
@@ -55,6 +61,8 @@ struct ContentView: View {
                 GalleryView()
             }
         }
+        .environmentObject(videosViewModel)
+        .environmentObject(selectionModel)
     }
 }
 
