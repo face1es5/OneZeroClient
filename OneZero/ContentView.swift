@@ -22,6 +22,9 @@ struct SidebarMenuGroups: Identifiable, Hashable {
 struct ContentView: View {
     @StateObject var videosViewModel: VideosViewModel = VideosViewModel()
     @StateObject var selectionModel: SelectionModel<VideoItem> = SelectionModel<VideoItem>()
+    @StateObject var appViewModel: AppViewModel = AppViewModel()
+    @State var selectedView: SidebarMenuItem?
+    
     let sideBarGroups = [
         SidebarMenuGroups(name: "Administrator", menus: [
             SidebarMenuItem(name: "Upload", icon: "icloud.and.arrow.up")
@@ -31,7 +34,6 @@ struct ContentView: View {
         ])
     ]
 
-    @State var selectedView: SidebarMenuItem?
 
     var body: some View {
         NavigationSplitView {
@@ -48,21 +50,33 @@ struct ContentView: View {
             .frame(width: 200)
             .navigationTitle("Sidebar")
         } detail: {
-            if let selectedView {
-                switch selectedView.name {
-                case "Upload":
-                    UploadView()
-                case "Gallery":
+            HStack(spacing: 0) {
+                if let selectedView {
+                    switch selectedView.name {
+                    case "Upload":
+                        UploadView()
+                    case "Gallery":
+                        GalleryView()
+                    default:
+                        EmptyView()
+                    }
+                } else {
                     GalleryView()
-                default:
-                    EmptyView()
                 }
-            } else {
-                GalleryView()
+                if appViewModel.showRightPanel {
+                    HStack {
+                        Divider()
+                        VideoDetailsView()
+                    }
+                    .transition(.move(edge: appViewModel.showRightPanel ? .trailing : .leading))
+                    .frame(maxWidth: 200)
+                }
             }
+            .animation(.easeInOut(duration: 0.3), value: appViewModel.showRightPanel)
         }
         .environmentObject(videosViewModel)
         .environmentObject(selectionModel)
+        .environmentObject(appViewModel)
     }
 }
 

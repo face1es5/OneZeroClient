@@ -20,10 +20,12 @@
 		CFDD8D842C64FA5B0048D9F5 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = CFDD8D832C64FA5B0048D9F5 /* .gitignore */; };
 		CFE12C2A2C6BC08300966529 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE12C292C6BC08300966529 /* APIService.swift */; };
 		CFE227882C6E55350081B1A7 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CFE227862C6E55350081B1A7 /* Localizable.strings */; };
+		CFE2278A2C6E69670081B1A7 /* VideoDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE227892C6E69670081B1A7 /* VideoDetailsView.swift */; };
 		CFE290D02C6C857000CA3B25 /* VideoThumbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE290CF2C6C857000CA3B25 /* VideoThumbView.swift */; };
 		CFE688A42C6DB16C0081B70E /* AppStatusMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE688A32C6DB16C0081B70E /* AppStatusMenuView.swift */; };
 		CFE688A72C6DD6B60081B70E /* Uploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE688A62C6DD6B60081B70E /* Uploader.swift */; };
 		CFE688AA2C6DF4EA0081B70E /* String_Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE688A92C6DF4EA0081B70E /* String_Ext.swift */; };
+		CFED82772C6F48FF00D7AC89 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFED82762C6F48FF00D7AC89 /* AppViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,10 +46,12 @@
 		CFDD8D832C64FA5B0048D9F5 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		CFE12C292C6BC08300966529 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		CFE227872C6E55350081B1A7 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = Localizable.strings; sourceTree = "<group>"; };
+		CFE227892C6E69670081B1A7 /* VideoDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDetailsView.swift; sourceTree = "<group>"; };
 		CFE290CF2C6C857000CA3B25 /* VideoThumbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoThumbView.swift; sourceTree = "<group>"; };
 		CFE688A32C6DB16C0081B70E /* AppStatusMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStatusMenuView.swift; sourceTree = "<group>"; };
 		CFE688A62C6DD6B60081B70E /* Uploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uploader.swift; sourceTree = "<group>"; };
 		CFE688A92C6DF4EA0081B70E /* String_Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String_Ext.swift; sourceTree = "<group>"; };
+		CFED82762C6F48FF00D7AC89 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +98,7 @@
 				CFE12C292C6BC08300966529 /* APIService.swift */,
 				CFE290CF2C6C857000CA3B25 /* VideoThumbView.swift */,
 				CF4449042C6B53DE00191EF1 /* ContentView.swift */,
+				CFE227892C6E69670081B1A7 /* VideoDetailsView.swift */,
 				CF3F6A362C67AA65007079E8 /* UploadView.swift */,
 				CFDD8D782C64FA1B0048D9F5 /* Assets.xcassets */,
 				CFDD8D7A2C64FA1B0048D9F5 /* Preview Content */,
@@ -124,6 +129,7 @@
 				CF68C2A02C6C890D00FF05BF /* VideoItem.swift */,
 				CF44EB922C6D16E9008F461E /* SelectionModel.swift */,
 				CFE688A62C6DD6B60081B70E /* Uploader.swift */,
+				CFED82762C6F48FF00D7AC89 /* AppViewModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -214,8 +220,10 @@
 				CFE688A72C6DD6B60081B70E /* Uploader.swift in Sources */,
 				CFDD8D752C64FA1A0048D9F5 /* OneZeroApp.swift in Sources */,
 				CFE688A42C6DB16C0081B70E /* AppStatusMenuView.swift in Sources */,
+				CFED82772C6F48FF00D7AC89 /* AppViewModel.swift in Sources */,
 				CF3F6A392C67AC6B007079E8 /* GalleryView.swift in Sources */,
 				CF4449052C6B53DE00191EF1 /* ContentView.swift in Sources */,
+				CFE2278A2C6E69670081B1A7 /* VideoDetailsView.swift in Sources */,
 				CF68C29F2C6C885A00FF05BF /* VideosViewModel.swift in Sources */,
 				CFE290D02C6C857000CA3B25 /* VideoThumbView.swift in Sources */,
 				CF44EB932C6D16E9008F461E /* SelectionModel.swift in Sources */,

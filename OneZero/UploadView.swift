@@ -28,21 +28,20 @@ struct VideoGalleryView: View {
             }
             .padding(.horizontal)
         }
-        .frame(maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
 struct UploadView: View {
     @EnvironmentObject var videosViewModel: VideosViewModel
     @EnvironmentObject var selectionModel: SelectionModel<VideoItem>
+    @EnvironmentObject var appViewModel: AppViewModel
 
     var body: some View {
-        VStack {
-            VideoGalleryView()
-        }
+        VideoGalleryView()
         .navigationTitle("Upload videos")
         .toolbar {
-            ToolbarItemGroup {
+            ToolbarItemGroup(placement: .automatic) {
                 Button(action: { // select files.
                     let panel = NSOpenPanel()
                     panel.allowsMultipleSelection = true
@@ -55,6 +54,7 @@ struct UploadView: View {
                 }) {
                     Image(systemName: "photo.on.rectangle")
                 }.help("Select videos to upload")
+                
                 Button(action: {
                     Task {
                         await upload()
@@ -64,11 +64,11 @@ struct UploadView: View {
                 }
                 .help("Upload selected videos")
                 .disabled((selectionModel.count > 0) ? false : true)
-                Button(action: {
-                    print("right sidebar toggle")
-                }) {
-                    Image(systemName: "sidebar.right")
+                Button(action: { withAnimation { appViewModel.showRightPanel.toggle() } }) {
+                    Label("Show/Hide right panel", systemImage: "sidebar.right")
                 }
+                .help("Show/Hide right panel")
+                .keyboardShortcut("s", modifiers: .command)
             }
         }
     }
