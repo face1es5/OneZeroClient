@@ -16,7 +16,6 @@ struct VideoDetailsView: View {
             VStack {
                 Text(selectionModel.selectedItem!.name)
             }
-            .padding()
         }
     }
 }

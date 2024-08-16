@@ -67,6 +67,8 @@ struct ContentView: View {
                     HStack {
                         Divider()
                         VideoDetailsView()
+                            .padding()
+                            .frame(maxWidth: .infinity)
                     }
                     .transition(.move(edge: appViewModel.showRightPanel ? .trailing : .leading))
                     .frame(maxWidth: 200)
