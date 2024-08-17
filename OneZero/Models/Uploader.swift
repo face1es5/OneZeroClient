@@ -39,12 +39,12 @@ class Uploader {
             }
         }
     }
-    
+
     /**
      Upload video **from** localPath and **to** serverPath.
      */
     func upload(from localPath: String, to serverPath: String) async {
-        let video = VideoItem(from: localPath)
+        async let video = VideoItem(from: localPath)
         await upload(for: video, to: serverPath)
     }
     

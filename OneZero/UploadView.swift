@@ -87,12 +87,31 @@ struct UploadView: View {
                                     DragGesture()
                                         .onChanged { value in
                                             // creates rect on first dragging
+                                            let offsetPoint = geo.frame(in: .global).origin
+                                            // ... even not scroll, geo has an initial offset, so add it...
+                                            let base = CGPoint(
+                                                x: offsetPoint.x - 201,
+                                                y: offsetPoint.y - 52
+                                            )
+//                                            print("geo: \(base)")
+                                            
+                                            let startPoint: CGPoint = CGPoint(
+                                                x: value.startLocation.x + base.x,
+                                                y: value.startLocation.y + base.y
+                                            )
+                                            let currentPoint: CGPoint = CGPoint(
+                                                x: value.location.x + base.x,
+                                                y: value.location.y + base.y
+                                            )
+//                                            print("startPoint: \(startPoint)")
+//                                            print("currentPoint: \(currentPoint)")
                                             if !isSelecting {
                                                 isSelecting = true
-                                                selectionRect = CGRect(x: value.startLocation.x,
-                                                                       y: value.startLocation.y,
-                                                                       width: 0,
-                                                                       height: 0
+                                                selectionRect = CGRect(
+                                                    x: startPoint.x,
+                                                    y: startPoint.y,
+                                                    width: 0,
+                                                    height: 0
                                                 )
                                             }
                                             /**
@@ -102,15 +121,22 @@ struct UploadView: View {
                                              Cause we expect the rectangle can be selected in four-way(.i.e ne/se/sw/nw), so we should choose min origin between source and current, traditionally, the CGRect will extend to the southeast.
                                              We can assume the rectangle has a fixed source point(in this case, the source point is value.startLocation instead of rect's origin, because origin will change during dragging), then we need to calculate position of rect's left corner(mentioned above, rect will draw along the lower right).
                                              So choose the min value of the source coord and current coord(two dimension).
+                                             **Fix**
+                                             When rectangle is shown in a scroll view, it's origin point coord will be incorrect, to fix this we have to convert the start point relative to scrollview.
                                              */
                                             //
-                                            selectionRect.size = CGSize(width: abs(value.location.x - value.startLocation.x), height: abs(value.location.y - value.startLocation.y))
-                                            selectionRect.origin = CGPoint(x: min(value.location.x, value.startLocation.x), y: min(value.location.y, value.startLocation.y))
-                                            
+                                            selectionRect.size = CGSize(
+                                                width: abs(currentPoint.x - startPoint.x),
+                                                height: abs(currentPoint.y - startPoint.y)
+                                            )
+                                            selectionRect.origin = CGPoint(
+                                                x: min(currentPoint.x, startPoint.x),
+                                                y: min(currentPoint.y, startPoint.y)
+                                            )
                                         }
                                         .onEnded { value in
                                             isSelecting = false
-                                            print("Selection rect: \(selectionRect)")
+//                                            print("Selection rect: \(selectionRect)")
                                             
                                         }
                                 )
@@ -118,9 +144,10 @@ struct UploadView: View {
                         }
                     )
             }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-          
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
         }
+  
 
     }
 

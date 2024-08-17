@@ -55,7 +55,7 @@ struct ContentView: View {
                     switch selectedView.name {
                     case "Upload":
                         UploadView()
-                    case "Gallery":
+                    case "Gallery_title":
                         GalleryView()
                     default:
                         EmptyView()
