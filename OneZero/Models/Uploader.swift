@@ -54,7 +54,7 @@ class Uploader {
     func uploadVideos(_ videos: [String], to serverPath: String) async {
         for path in videos {
             Task {
-                await Uploader.shared.upload(from:path, to: serverPath)
+                await Uploader.shared.upload(from: path, to: serverPath)
             }
         }
     }

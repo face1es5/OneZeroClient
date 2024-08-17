@@ -17,34 +17,27 @@ struct VideoGalleryView: View {
                     .onTapGesture {
                         /**
                          we should:
-                            1. clear previous selection (At this time, don't need to clear collection, just deactive previous selected item)
-                            2. make current selected
-                            3. update state of current
-                            4. special exception: is selectedItem is self, deselect it
+                            1. clear previous selection (clear collection and make selectedItem is nil)
+                            2. set current selected
+                            3. update state of current(except it's already selected previous)
                          */
-                        if video.isSelected {
-                            // if self is current selection , deselect
-                            selectionModel.deselect()
-                        } else {
-                            // if not, deselect pre
+                        if !video.isSelected {
+                            // if pre selected isn't cur, deselect pre and remove it from collection
                             selectionModel.selectedItem?.isSelected.toggle()
+                            selectionModel.deselect()
                             // then select self.
                             selectionModel.select(video)
+                            video.isSelected.toggle()
                         }
-                        video.isSelected.toggle()
                     }
             }
         }
         .padding(.horizontal)
         .searchable(text: $videosViewModel.searchString)
+        .onAppear {
+            videosViewModel.setSelectionModel(selectionModel)
+        }
     }
-//    var filteredMedia: [VideoItem] {
-//        guard !searchString.isEmpty else { return videosViewModel.videos }
-////        print("applying search: \(searchString)")
-//        return videosViewModel.videos.filter {
-//            $0.name.lowercased().contains(searchString.lowercased())
-//        }
-//    }
 }
 
 

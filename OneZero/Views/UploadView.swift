@@ -50,7 +50,7 @@ struct UploadView: View {
                                 Image(systemName: "square.and.arrow.up")
                             }
                             .help("Upload selected videos")
-                            .disabled((selectionModel.count > 0) ? false : true)
+                            .disabled(selectionModel.hasSelection ? false : true)
                             Button(action: { withAnimation { appViewModel.showRightPanel.toggle() } }) {
                                 Label("Show/Hide right panel", systemImage: "sidebar.right")
                             }
@@ -128,13 +128,12 @@ struct UploadView: View {
         .contextMenu {
             Button("clear") {
                 videosViewModel.clear()
-                selectionModel.deselect()
             }
         }
     }
 
     func upload() async {
-        guard selectionModel.count > 0 else { print("No videos selected."); return }
+        if !selectionModel.hasSelection { print("No videos selected."); return }
         for video in selectionModel {
             Task {
                 await Uploader.shared.upload(for: video, to: "api/upload")

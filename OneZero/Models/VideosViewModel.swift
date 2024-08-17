@@ -8,9 +8,11 @@
 import Foundation
 
 class VideosViewModel: ObservableObject {
+    private var selectionModel: SelectionModel<VideoItem>?
     @Published var videos: [VideoItem] = [] {
         didSet {
             Task { await doFilter() }
+            selectionModel?.clear()
         }
     }
     @Published var searchString: String = "" {
@@ -19,6 +21,10 @@ class VideosViewModel: ObservableObject {
         }
     }
     @Published var filteredMedia: [VideoItem] = []
+    
+    func setSelectionModel(_ model: SelectionModel<VideoItem>) {
+        selectionModel = model
+    }
     
     private func filterMedia() async -> [VideoItem] {
         guard !searchString.isEmpty else { return videos }
