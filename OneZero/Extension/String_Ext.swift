@@ -7,6 +7,12 @@
 
 import Foundation
 
+extension URL {
+    func urlDecode() -> String {
+        return self.path(percentEncoded: false)
+    }
+}
+
 extension String {
     func urlEncode() -> String {
         return self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? self

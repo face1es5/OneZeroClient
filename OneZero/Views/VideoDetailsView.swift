@@ -55,7 +55,7 @@ struct VideoDetailsView: View {
                     Field(key: "Duration(secs)", value: video.meta.duration)
                     Field(key: "Resolution", value: video.meta.resolution)
                     Field(key: "Creation date", value: video.meta.creationDate)
-                    Field(key: "Full path", value: video.url.path(percentEncoded: false))
+                    Field(key: "Full path", value: video.url.urlDecode())
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()

@@ -99,7 +99,7 @@ class VideoItem: Identifiable, Hashable, ObservableObject {
     
     func genThumbnail() {
         self.loadingThumb = true
-//        print("generating image thumbnail from \(self.url)")
+//        print("generating image for \(self.name) thumbnail from \(self.url.urlDecode())")
         let asset = AVURLAsset(url: self.url, options: nil)
         let img_gen = AVAssetImageGenerator(asset: asset)
         img_gen.appliesPreferredTrackTransform = true

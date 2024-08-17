@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CF0602CF2C7118AF00265292 /* VideoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0602CE2C7118AF00265292 /* VideoGalleryView.swift */; };
 		CF3F6A372C67AA65007079E8 /* UploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3F6A362C67AA65007079E8 /* UploadView.swift */; };
 		CF3F6A392C67AC6B007079E8 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3F6A382C67AC6B007079E8 /* GalleryView.swift */; };
 		CF4449052C6B53DE00191EF1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4449042C6B53DE00191EF1 /* ContentView.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CF0602CE2C7118AF00265292 /* VideoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoGalleryView.swift; sourceTree = "<group>"; };
 		CF1CF3942C6C720B00D689D0 /* OneZeroDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneZeroDebug.entitlements; sourceTree = "<group>"; };
 		CF3F6A362C67AA65007079E8 /* UploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadView.swift; sourceTree = "<group>"; };
 		CF3F6A382C67AC6B007079E8 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
@@ -65,6 +67,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CF0602CD2C71187100265292 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CFE688A32C6DB16C0081B70E /* AppStatusMenuView.swift */,
+				CF3F6A382C67AC6B007079E8 /* GalleryView.swift */,
+				CF4449042C6B53DE00191EF1 /* ContentView.swift */,
+				CFE290CF2C6C857000CA3B25 /* VideoThumbView.swift */,
+				CF3F6A362C67AA65007079E8 /* UploadView.swift */,
+				CFE227892C6E69670081B1A7 /* VideoDetailsView.swift */,
+				CF0602CE2C7118AF00265292 /* VideoGalleryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		CFDD8D682C64FA190048D9F5 = {
 			isa = PBXGroup;
 			children = (
@@ -93,13 +109,8 @@
 				CFE290D12C6C879500CA3B25 /* Models */,
 				CF4449062C6B63B900191EF1 /* Settings.swift */,
 				CFDD8D742C64FA1A0048D9F5 /* OneZeroApp.swift */,
-				CFE688A32C6DB16C0081B70E /* AppStatusMenuView.swift */,
-				CF3F6A382C67AC6B007079E8 /* GalleryView.swift */,
+				CF0602CD2C71187100265292 /* Views */,
 				CFE12C292C6BC08300966529 /* APIService.swift */,
-				CFE290CF2C6C857000CA3B25 /* VideoThumbView.swift */,
-				CF4449042C6B53DE00191EF1 /* ContentView.swift */,
-				CFE227892C6E69670081B1A7 /* VideoDetailsView.swift */,
-				CF3F6A362C67AA65007079E8 /* UploadView.swift */,
 				CFDD8D782C64FA1B0048D9F5 /* Assets.xcassets */,
 				CFDD8D7A2C64FA1B0048D9F5 /* Preview Content */,
 			);
@@ -218,6 +229,7 @@
 				CF68C2A12C6C890D00FF05BF /* VideoItem.swift in Sources */,
 				CFE688AA2C6DF4EA0081B70E /* String_Ext.swift in Sources */,
 				CFE688A72C6DD6B60081B70E /* Uploader.swift in Sources */,
+				CF0602CF2C7118AF00265292 /* VideoGalleryView.swift in Sources */,
 				CFDD8D752C64FA1A0048D9F5 /* OneZeroApp.swift in Sources */,
 				CFE688A42C6DB16C0081B70E /* AppStatusMenuView.swift in Sources */,
 				CFED82772C6F48FF00D7AC89 /* AppViewModel.swift in Sources */,
