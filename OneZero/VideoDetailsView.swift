@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import AVKit
 
 struct Field: View {
     let key: String,
         value: String
     var body: some View {
         Text(NSLocalizedString(key, comment: "") + ": " + NSLocalizedString(value, comment: ""))
+            .multilineTextAlignment(.leading)
     }
 }
 extension Form {
@@ -20,34 +22,45 @@ extension Form {
     }
 }
 
-struct VideoDetailsView: View {
+struct VideoDetailsContainer: View {
     @EnvironmentObject var selectionModel: SelectionModel<VideoItem>
     var body: some View {
         if selectionModel.selectedItem == nil {
-            VStack {
+            VStack(alignment: .leading) {
                 Text("Please select a video to show detail info.")
                    .frame(maxHeight: .infinity)
                    .font(.title2)
-                Spacer()
             }
+        } else {
+            VideoDetailsView(video: selectionModel.selectedItem!)
+        }
+    }
+}
 
-       } else {
-            let video = selectionModel.selectedItem!
-            ScrollView {
-                VStack(alignment: .leading) {
-                    Text(video.name)
-                        .font(.title2)
-                    DisclosureGroup("meta") {
-                        Form {
-                            Field(key: "size", value: video.meta.size)
-                            Field(key: "duration(secs)", value: video.meta.duration)
-                            Field(key: "resolution", value: video.meta.resolution)
-                            Field(key: "creation date", value: video.meta.creationDate)
-                        }
-                    }
-                    Spacer()
-                }
+struct VideoDetailsView: View {
+    @ObservedObject var video: VideoItem
+    var body: some View {
+        ScrollView {
+            Text(video.name)
+                .font(.title2)
+            Form {
+                TextField("title:", text: $video.title)
+                TextField("description:", text: $video.description)
             }
+            VideoPlayer(player: AVPlayer(url: video.url))
+                .frame(height: 200)
+            DisclosureGroup("meta") {
+                Form {
+                    Field(key: "Size", value: video.meta.size)
+                    Field(key: "Duration(secs)", value: video.meta.duration)
+                    Field(key: "Resolution", value: video.meta.resolution)
+                    Field(key: "Creation date", value: video.meta.creationDate)
+                    Field(key: "Full path", value: video.url.path(percentEncoded: false))
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+            }
+            Spacer()
         }
     }
 }
@@ -57,12 +70,17 @@ struct VideoDetailsDemo: View {
     @State var isExpanded = false
     var body: some View {
         VStack(alignment: .leading) {
-            Text(video.name)
-                .font(.title2)
-            DisclosureGroup("meta") {
-                Text("duration: \(video.meta.duration)")
+            Form {
+                Text(video.name)
+                    .font(.title2)
+                TextField("title:", text: $video.title)
+                TextField("description:", text: $video.description)
+                DisclosureGroup("meta") {
+                    Text("duration: \(video.meta.duration)")
+                }
             }
         }
+        .frame(width: 200)
     }
 }
 

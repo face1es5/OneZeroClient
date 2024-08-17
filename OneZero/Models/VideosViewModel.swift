@@ -19,4 +19,5 @@ class VideosViewModel: ObservableObject {
     }
 
     func count() -> Int { return videos.count }
+    func clear() { videos = [] }
 }

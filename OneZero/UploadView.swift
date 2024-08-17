@@ -16,9 +16,20 @@ struct VideoGalleryView: View {
             ForEach(videosViewModel.videos) { video in
                 VideoThumbView(video: video)
                     .onTapGesture {
-                        if selectionModel.isSelected(video) {
-                            selectionModel.deselect(video)
+                        /**
+                         we should:
+                            1. clear previous selection (At this time, don't need to clear collection, just deactive previous selected item)
+                            2. make current selected
+                            3. update state of current
+                            4. special exception: is selectedItem is self, deselect it
+                         */
+                        if video.isSelected {
+                            // if self is current selection , deselect
+                            selectionModel.deselect()
                         } else {
+                            // if not, deselect pre
+                            selectionModel.selectedItem?.isSelected.toggle()
+                            // then select self.
                             selectionModel.select(video)
                         }
                         video.isSelected.toggle()
@@ -145,10 +156,13 @@ struct UploadView: View {
                     )
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
         }
-  
-
+        .contextMenu {
+            Button("clear") {
+                videosViewModel.clear()
+                selectionModel.deselect()
+            }
+        }
     }
 
     func upload() async {

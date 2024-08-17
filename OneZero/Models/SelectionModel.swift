@@ -10,27 +10,25 @@ import Foundation
 class SelectionModel<T: Hashable>: ObservableObject, Sequence {
     @Published var selectedItems: Set<T> = []
     
-    var selectedItem: T? {
-        selectedItems.first
-    }
-
+    @Published var selectedItem: T? = nil
+    
     var count: Int {
         selectedItems.count
     }
-
+    
     func makeIterator() -> Set<T>.Iterator {
         return selectedItems.makeIterator()
     }
-
-    func isSelected(_ item: T) -> Bool {
-        return selectedItems.contains(item)
+    
+    func hasSelection() -> Bool {
+        return selectedItem != nil
     }
-
-    func deselect(_ item: T) {
-        selectedItems.remove(item)
+    
+    func deselect() {
+        selectedItem = nil
     }
-
+    
     func select(_ item: T) {
-        selectedItems.insert(item)
+        selectedItem = item
     }
 }

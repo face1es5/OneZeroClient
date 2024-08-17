@@ -74,6 +74,8 @@ class VideoItem: Identifiable, Hashable, ObservableObject {
     @Published var isSelected: Bool = false
     @Published var loadingThumb: Bool = true
     @Published var uploading: Bool = false
+    @Published var description: String = ""
+    @Published var title: String = ""
 
     init(from url: URL) {
         self.url = url

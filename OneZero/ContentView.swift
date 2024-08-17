@@ -66,12 +66,12 @@ struct ContentView: View {
                 if appViewModel.showRightPanel {
                     HStack {
                         Divider()
-                        VideoDetailsView()
+                        VideoDetailsContainer()
                             .padding()
                             .frame(maxWidth: .infinity)
                     }
                     .transition(.move(edge: appViewModel.showRightPanel ? .trailing : .leading))
-                    .frame(maxWidth: 200)
+                    .frame(maxWidth: 300)
                 }
             }
             .animation(.easeInOut(duration: 0.3), value: appViewModel.showRightPanel)

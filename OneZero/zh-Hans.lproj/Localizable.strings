@@ -14,9 +14,10 @@
 "Upload videos" = "上传视频";
 "Select videos to upload" = "选择要上传的视频";
 "meta" = "元数据";
-"duration(secs)" = "时长(秒)";
-"resolution" = "分辨率";
-"creation date" = "创建日期";
-"not available" = "不可用";
+"Duration(secs)" = "时长(秒)";
+"Resolution" = "分辨率";
+"Creation date" = "创建日期";
+"Not available" = "不可用";
 "Please select a video to show detail info." = "请选择视频来显示详细信息.";
-"size" = "大小";
+"Size" = "大小";
+"Full path" = "绝对路径";
