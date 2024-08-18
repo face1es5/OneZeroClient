@@ -23,6 +23,7 @@ struct ContentView: View {
     @StateObject var videosViewModel: VideosViewModel = VideosViewModel()
     @StateObject var selectionModel: SelectionModel<VideoItem> = SelectionModel<VideoItem>()
     @StateObject var appViewModel: AppViewModel = AppViewModel()
+    @StateObject var uploadManger: UploadManager = UploadManager.shared
     @State var selectedView: SidebarMenuItem?
     
     let sideBarGroups = [
@@ -79,6 +80,7 @@ struct ContentView: View {
         .environmentObject(videosViewModel)
         .environmentObject(selectionModel)
         .environmentObject(appViewModel)
+        .environmentObject(uploadManger)
     }
 }
 

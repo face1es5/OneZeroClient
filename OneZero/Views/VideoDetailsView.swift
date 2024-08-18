@@ -98,16 +98,66 @@ struct CollectionView: View {
     
 }
 
-struct UploadTaskView: View {
-    @State var tasknum: Int = 0
+struct TaskGroupView: View {
+    @ObservedObject var taskGroup: UploadTaskGroup
+    @State var isPaused = false
+    @State var isHalted = false
     var body: some View {
-        VStack {
-            if tasknum == 0 {
+        HStack(alignment: .top) {
+            DisclosureGroup(taskGroup.name) {
+                Form {
+                    Field(key: "Description", value: taskGroup.description)
+                    // TODO: split single upload task view to monitor status of video(make video Observed)
+                    ForEach(taskGroup.videos) { video in
+                        HStack {
+                            Image(systemName: video.uploading ? "icloud.fill" : "checkmark.icloud.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .background(Color.clear.opacity(video.uploading ? 0.8 : 1))
+                                .frame(width: 12, height: 12)
+                            Text(video.name)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+            }
+            Image(systemName: isPaused ? "play.circle" : "pause.circle")
+                .resizable()
+                .frame(width: 12, height: 12)
+                .onTapGesture {
+                    isPaused.toggle()
+                    print("\(isPaused ? "pause" : "start") taks \(taskGroup.name)")
+                }
+                .padding(.top, 7)
+            Image(systemName: "xmark.circle")
+                .resizable()
+                .frame(width: 12, height: 12)
+                .onTapGesture {
+                    isHalted.toggle()
+                    print("halt taks \(taskGroup.name)")
+                }
+                .padding(.top, 7)
+        }
+    }
+}
+
+
+
+struct UploadTaskView: View {
+    @EnvironmentObject var uploadManager: UploadManager
+    var body: some View {
+        ScrollView {
+            if uploadManager.taskGroups.count == 0 {
                 Text("No task.")
                     .font(.title2)
             } else {
-                Text("Tasks: \(tasknum)")
+                Text("Task groups: \(uploadManager.taskGroups.count)")
+                ForEach(uploadManager.taskGroups) { group in
+                    TaskGroupView(taskGroup: group)
+                }
             }
+            Spacer()
         }
     }
 }
@@ -174,6 +224,7 @@ struct VideoDetailsDemo: View {
                 DisclosureGroup("meta") {
                     Text("duration: \(video.meta.duration)")
                 }
+                Spacer()
             }
         }
         .frame(width: 200)
@@ -182,6 +233,7 @@ struct VideoDetailsDemo: View {
 
 struct VideoDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        VideoDetailsDemo()
+//        VideoDetailsDemo()
+        UploadTaskView()
     }
 }

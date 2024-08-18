@@ -75,9 +75,11 @@ struct VideoThumbView: View {
                 }
             }
             Button("Upload") {  // upload selected video
-                Task.detached(priority: .background) {
-                    await Uploader.shared.upload(for: video, to: "api/upload")
-                }
+                UploadManager.shared.uploadRequest(for: video, to: "api/upload")
+                // TODO: true uploading.
+//                Task.detached(priority: .background) {
+//                    await Uploader.shared.upload(for: video, to: "api/upload")
+//                }
             }
             Divider()
             Button("Refresh thumbnail") {   //  force to refresh thumbnail
