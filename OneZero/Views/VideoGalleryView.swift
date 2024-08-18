@@ -24,6 +24,7 @@ struct VideoGalleryView: View {
                         if !video.isSelected {
                             // if pre selected isn't cur, deselect pre and remove it from collection
                             selectionModel.selectedItem?.isSelected.toggle()
+                            for video in selectionModel.selectedItems { video.isSelected.toggle() }
                             selectionModel.deselect()
                             // then select self.
                             selectionModel.select(video)

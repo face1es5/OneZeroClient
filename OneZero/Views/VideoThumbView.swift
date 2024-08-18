@@ -10,7 +10,7 @@ import SwiftUI
 
 struct VideoThumbView: View {
     @ObservedObject var video: VideoItem
-
+    
     var body: some View {
         ZStack(alignment: .center) {
             if video.uploading {
@@ -21,7 +21,11 @@ struct VideoThumbView: View {
                 if video.loadingThumb {
                     ProgressView()
                 } else if video.thumbnail == nil {
-                    Button(action: video.genThumbnail) {
+                    Button(action: {
+                        Task {
+                            await video.genThumbnail()
+                        }
+                    }) {
                         Image(systemName: "arrow.clockwise")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
@@ -45,12 +49,21 @@ struct VideoThumbView: View {
                     .background(video.isSelected ? .accentColor.opacity(0.5) : Color.clear)
             }
             .padding()
-            .task { if video.thumbnail == nil { video.genThumbnail() }}
+            .task {
+                if video.thumbnail == nil {
+                    // generate thumbnail if the it's nil
+                    await video.genThumbnail()
+                }
+            }
         }
         .frame(maxWidth: 200, maxHeight: 200)
+        .background(
+            GeometryReader { geo in
+                Color.clear
+                    .preference(key: VideoFrameKey.self, value: [video.id: geo.frame(in: .global)])
+            }
+        )
     }
-
-
 }
 
 struct TestThumbView: View {

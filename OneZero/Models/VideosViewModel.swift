@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// A View Model holds a collection of media, **also it has a internal selectionModel reference**.
+///
+/// **Any modification on internal items will clear selection.**
 class VideosViewModel: ObservableObject {
     private var selectionModel: SelectionModel<VideoItem>?
     @Published var videos: [VideoItem] = [] {

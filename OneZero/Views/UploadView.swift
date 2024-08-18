@@ -8,12 +8,21 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
+struct VideoFrameKey: PreferenceKey {
+    static var defaultValue: [UUID: CGRect] = [:]
+    
+    static func reduce(value: inout [UUID: CGRect], nextValue: () -> [UUID: CGRect]) {
+        value.merge(nextValue()) { $1 }
+    }
+}
+
 struct UploadView: View {
     @EnvironmentObject var videosViewModel: VideosViewModel
     @EnvironmentObject var selectionModel: SelectionModel<VideoItem>
     @EnvironmentObject var appViewModel: AppViewModel
     @State var selectionRect: CGRect = .zero
     @State var isSelecting: Bool = false
+    @State private var videoFrames: [UUID: CGRect] = [:]
 
     var body: some View {
         ZStack {
@@ -115,13 +124,42 @@ struct UploadView: View {
                                         }
                                         .onEnded { value in
                                             isSelecting = false
-//                                            print("Selection rect: \(selectionRect)")
-                                            
+                                            let basePoint = CGPoint(x: 220, y: 52)
+                                            var realRect = selectionRect
+                                            // selectionRect is relative to gallery view, but videoFrame is global, so we need to make selectionRect's coord global.
+                                            realRect.origin = CGPoint(
+                                                x: realRect.minX + basePoint.x,
+                                                y: realRect.minY + basePoint.y
+                                            )
+//                                            print("------\nreal rect: \(realRect)")
+                                            // deselect previous selection and select current selection.
+                                            for video in selectionModel.selectedItems {
+                                                video.isSelected.toggle()
+                                            }
+                                            var selectedVideos: [VideoItem] = []
+                                            for (id, frame) in videoFrames {
+                                                if realRect.intersects(frame) {
+                                                    if let video = videosViewModel.filteredMedia.first(where: { $0.id == id }) {
+                                                        video.isSelected = true
+                                                        selectedVideos.append(video)
+//                                                        if !video.isSelected {
+//                                                            print("selected video: \(video.name), \(frame.origin)")
+//                                                            selectionModel.select(video)
+//                                                            video.isSelected.toggle()
+//                                                        }
+                                                    }
+                                                }
+                                            }
+                                            selectionModel.select(selectedVideos)
+//                                            print("------\n")
                                         }
                                 )
-                            
+
                         }
                     )
+                    .onPreferenceChange(VideoFrameKey.self) { preferences in
+                        videoFrames = preferences
+                    }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

@@ -22,6 +22,9 @@ class SelectionModel<T: Hashable>: ObservableObject, Sequence {
         selectedItem != nil || selectedItems.count > 0
     }
     
+    /**
+     Deselect selectedItem and selectedItems.
+     */
     func deselect() {
         guard selectedItem != nil else { return }
         selectedItems.remove(selectedItem!)
@@ -31,6 +34,14 @@ class SelectionModel<T: Hashable>: ObservableObject, Sequence {
     func select(_ item: T) {
         selectedItem = item
         selectedItems = [item]
+    }
+    
+    /**
+     Select items, this will deselect previous selection.
+     */
+    func select(_ items: [T]) {
+        selectedItem = nil
+        selectedItems = Set(items)
     }
     
     func clear() {

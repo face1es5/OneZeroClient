@@ -9,6 +9,9 @@ import Foundation
 import SwiftUI
 import AVFoundation
 
+/**
+ Class that hold some meta info for a specific video item.
+ */
 class VideoAsset: ObservableObject {
     @Published var size: String = "loading..."
     @Published var duration: String = "loading..."
@@ -54,6 +57,9 @@ class VideoAsset: ObservableObject {
         return formatter.string(from: date)
     }
     
+    /**
+     Generate meta info of resource specified by url asynchronously.
+     */
     init(from url: URL) {
         Task {
             let asset = AVAsset(url: url)
@@ -77,12 +83,18 @@ class VideoItem: Identifiable, Hashable, ObservableObject {
     @Published var description: String = ""
     @Published var title: String = ""
 
+    /**
+     Init video item from URL struct.
+     */
     init(from url: URL) {
         self.url = url
         name = url.lastPathComponent
         meta = VideoAsset(from: url)
     }
 
+    /**
+     Init video item from url string(local or remote).
+     */
     init(from urlString: String) {
         url = URL(fileURLWithPath: urlString)
         name = url.lastPathComponent
@@ -97,19 +109,26 @@ class VideoItem: Identifiable, Hashable, ObservableObject {
         hasher.combine(url.absoluteString)
     }
     
-    func genThumbnail() {
-        self.loadingThumb = true
+    /**
+     Generate thumbnail for a video asynchronously(but change observed state in main thread).
+     */
+    func genThumbnail() async {
+        DispatchQueue.main.async {  // Force updating in main thread as it's a state related to UI in case task started in background.
+            self.loadingThumb = true
+        }
 //        print("generating image for \(self.name) thumbnail from \(self.url.urlDecode())")
         let asset = AVURLAsset(url: self.url, options: nil)
         let img_gen = AVAssetImageGenerator(asset: asset)
         img_gen.appliesPreferredTrackTransform = true
         DispatchQueue.global().async {
-            defer {
-                DispatchQueue.main.async {
-                    self.loadingThumb = false
-                }
-            }
             do {
+                defer {
+                    DispatchQueue.main.async {
+//                        print("loading thumbnail finished.")
+//                        print(self.thumbnail == nil)
+                        self.loadingThumb = false
+                    }
+                }
                 let cgImg = try img_gen.copyCGImage(at: CMTime(seconds: 1.0, preferredTimescale: 60), actualTime: nil)
                 DispatchQueue.main.async {
                     self.thumbnail = Image(cgImg, scale: 1.0, orientation: .up, label: Text(self.name))
