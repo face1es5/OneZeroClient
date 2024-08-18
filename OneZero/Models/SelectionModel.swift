@@ -31,13 +31,16 @@ class SelectionModel<T: Hashable>: ObservableObject, Sequence {
         selectedItem = nil
     }
     
+    /**
+     Select target item, **this will deselect previous selection**.
+     */
     func select(_ item: T) {
         selectedItem = item
         selectedItems = [item]
     }
     
     /**
-     Select items, this will deselect previous selection.
+     Select **items, this will deselect previous selection.**
      */
     func select(_ items: [T]) {
         selectedItem = nil

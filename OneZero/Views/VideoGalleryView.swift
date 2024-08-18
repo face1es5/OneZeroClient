@@ -21,11 +21,9 @@ struct VideoGalleryView: View {
                             2. set current selected
                             3. update state of current(except it's already selected previous)
                          */
-                        if !video.isSelected {
+                        if !video.isSelected || selectionModel.count > 0 {
                             // if pre selected isn't cur, deselect pre and remove it from collection
-                            selectionModel.selectedItem?.isSelected.toggle()
                             for video in selectionModel.selectedItems { video.isSelected.toggle() }
-                            selectionModel.deselect()
                             // then select self.
                             selectionModel.select(video)
                             video.isSelected.toggle()
