@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>应用程序需要访问下载文件夹以读取或保存文件。</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>应用程序需要访问文档文件夹以读取或保存文件。</string>
+	<key>NSDesktopFolderUsageDescription</key>
+	<string>应用程序需要访问桌面以读取或保存文件。</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>

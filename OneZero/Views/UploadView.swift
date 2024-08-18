@@ -49,7 +49,9 @@ struct UploadView: View {
                                 }
                             }) {
                                 Image(systemName: "photo.on.rectangle")
-                            }.help("Select videos to upload")
+                            }
+                            .help("Select videos to upload")
+                            .keyboardShortcut("i", modifiers: .command)
                             
                             Button(action: {
                                 Task {
@@ -60,6 +62,8 @@ struct UploadView: View {
                             }
                             .help("Upload selected videos")
                             .disabled(selectionModel.hasSelection ? false : true)
+                            .keyboardShortcut("u", modifiers: .command)
+                            
                             Button(action: { withAnimation { appViewModel.showRightPanel.toggle() } }) {
                                 Label("Show/Hide right panel", systemImage: "sidebar.right")
                             }
@@ -154,7 +158,6 @@ struct UploadView: View {
 //                                            print("------\n")
                                         }
                                 )
-
                         }
                     )
                     .onPreferenceChange(VideoFrameKey.self) { preferences in
@@ -164,7 +167,7 @@ struct UploadView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .contextMenu {
-            Button("clear") {
+            Button("Clear all") {
                 videosViewModel.clear()
             }
         }

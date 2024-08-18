@@ -10,6 +10,7 @@ import SwiftUI
 
 struct VideoThumbView: View {
     @ObservedObject var video: VideoItem
+    @State var frame: CGRect = .zero
     
     var body: some View {
         ZStack(alignment: .center) {
@@ -22,9 +23,7 @@ struct VideoThumbView: View {
                     ProgressView()
                 } else if video.thumbnail == nil {
                     Button(action: {
-                        Task {
-                            await video.genThumbnail()
-                        }
+                        refreshThumbnail()
                     }) {
                         Image(systemName: "arrow.clockwise")
                             .resizable()
@@ -50,10 +49,7 @@ struct VideoThumbView: View {
             }
             .padding()
             .task {
-                if video.thumbnail == nil {
-                    // generate thumbnail if the it's nil
-                    await video.genThumbnail()
-                }
+                refreshThumbnail()
             }
         }
         .frame(maxWidth: 200, maxHeight: 200)
@@ -61,8 +57,40 @@ struct VideoThumbView: View {
             GeometryReader { geo in
                 Color.clear
                     .preference(key: VideoFrameKey.self, value: [video.id: geo.frame(in: .global)])
+                    .onAppear {
+                        frame = geo.frame(in: .global)
+                    }
             }
         )
+        .contextMenu {
+            Button("Preview") { // popover to preview media
+                print("preview.")
+                let preview = MediaPreview(media: video)
+                let hostingController = NSHostingController(rootView: preview)
+                let popover = NSPopover()
+                popover.contentViewController = hostingController
+                popover.behavior = .transient
+                if let wind = NSApp.mainWindow {
+                    popover.show(relativeTo: frame, of: wind.contentView!, preferredEdge: .minY)
+                }
+            }
+            Button("Upload") {  // upload selected video
+                Task.detached(priority: .background) {
+                    await Uploader.shared.upload(for: video, to: "api/upload")
+                }
+            }
+            Divider()
+            Button("Refresh thumbnail") {   //  force to refresh thumbnail
+                refreshThumbnail(true)
+            }
+        }
+        .disabled(!video.isSelected)
+    }
+    
+    func refreshThumbnail(_ force: Bool = false) {
+        if video.thumbnail == nil || force {
+            Task { await video.genThumbnail() }
+        }
     }
 }
 

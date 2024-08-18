@@ -10,7 +10,7 @@ import SwiftUI
 struct AppStatusMenuView: View {
     private let supportedFormats = ["mp4", "avi", "mkv", "mov"]
     var body: some View {
-        Button("Upload video from clipboard") {
+        Button("Upload videos from clipboard") {
             Task {
                 await uploadByPasteboard()
             }

@@ -13,12 +13,13 @@ import AVFoundation
  Class that hold some meta info for a specific video item.
  */
 class VideoAsset: ObservableObject {
-    @Published var size: String = "loading..."
+    var size: Int64 = .zero
+    @Published var formattedSize: String = "loading..."
     @Published var duration: String = "loading..."
     @Published var resolution: String = "loading..."
     @Published var creationDate: String = "loading..."
     
-    private func getSize(_ url: URL) -> String {
+    private func getFormattedSize(_ url: URL) -> String {
         if url.scheme != "file" { return "Unknown" }
         guard
             let attr = try? FileManager.default.attributesOfItem(atPath: url.path),
@@ -26,6 +27,7 @@ class VideoAsset: ObservableObject {
         else {
             return "Invalid"
         }
+        size = filesz
         return filesz.formattedFileSize()
     }
     
@@ -63,7 +65,7 @@ class VideoAsset: ObservableObject {
     init(from url: URL) {
         Task {
             let asset = AVAsset(url: url)
-            size = getSize(url)
+            formattedSize = getFormattedSize(url)
             duration = await getDuration(asset)
             resolution = await getResolution(asset)
             creationDate = await getCreationDate(asset)

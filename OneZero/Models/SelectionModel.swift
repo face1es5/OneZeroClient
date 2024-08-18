@@ -43,8 +43,8 @@ class SelectionModel<T: Hashable>: ObservableObject, Sequence {
      Select **items, this will deselect previous selection.**
      */
     func select(_ items: [T]) {
-        selectedItem = nil
         selectedItems = Set(items)
+        selectedItem = selectedItems.first
     }
     
     func clear() {
