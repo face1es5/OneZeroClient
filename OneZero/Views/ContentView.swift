@@ -67,7 +67,7 @@ struct ContentView: View {
                 if appViewModel.showRightPanel {
                     HStack {
                         Divider()
-                        VideoDetailsContainer()
+                        DetailsView()
                             .padding()
                             .frame(maxWidth: .infinity)
                     }
