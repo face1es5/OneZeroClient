@@ -61,6 +61,7 @@ struct VideoDetailsContainer: View {
     }
 }
 
+/// View for a collection of selected items.
 struct CollectionView: View {
     @EnvironmentObject var selectionModel: SelectionModel<VideoItem>
     @State var totalSize: String = "Loading..."
@@ -98,44 +99,55 @@ struct CollectionView: View {
     
 }
 
+/// View for mininum task.
+struct TaskUnitView: View {
+    @ObservedObject var taskItem: VideoItem
+    var body: some View {
+        HStack {
+            Image(systemName: taskItem.uploading ? "icloud" : "checkmark.icloud.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 12, height: 12)
+            Text(taskItem.name)
+        }
+    }
+}
+
+/// View for a group of tasks.
 struct TaskGroupView: View {
     @ObservedObject var taskGroup: UploadTaskGroup
-    @State var isPaused = false
-    @State var isHalted = false
     var body: some View {
         HStack(alignment: .top) {
-            DisclosureGroup(taskGroup.name) {
-                Form {
-                    Field(key: "Description", value: taskGroup.description)
-                    // TODO: split single upload task view to monitor status of video(make video Observed)
-                    ForEach(taskGroup.videos) { video in
-                        HStack {
-                            Image(systemName: video.uploading ? "icloud.fill" : "checkmark.icloud.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .background(Color.clear.opacity(video.uploading ? 0.8 : 1))
-                                .frame(width: 12, height: 12)
-                            Text(video.name)
+            ZStack(alignment: .top) {
+                ProgressView(value: taskGroup.finishedNum, total: taskGroup.totalNum)
+                    .opacity(0.5)
+                    .padding(.top, 2)
+                    .scaleEffect(x: 1, y: 3)
+                DisclosureGroup(taskGroup.name) {
+                    Form {
+                        ForEach(taskGroup.videos) { video in
+                            TaskUnitView(taskItem: video)
                         }
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
+                .padding(.leading, 2)
             }
-            Image(systemName: isPaused ? "play.circle" : "pause.circle")
+            .padding(.trailing, 1)
+
+            Image(systemName: taskGroup.isPaused ? "play.circle" : "pause.circle")
                 .resizable()
                 .frame(width: 12, height: 12)
                 .onTapGesture {
-                    isPaused.toggle()
-                    print("\(isPaused ? "pause" : "start") taks \(taskGroup.name)")
+                    taskGroup.isPaused.toggle()
                 }
                 .padding(.top, 7)
             Image(systemName: "xmark.circle")
                 .resizable()
                 .frame(width: 12, height: 12)
                 .onTapGesture {
-                    isHalted.toggle()
-                    print("halt taks \(taskGroup.name)")
+                    taskGroup.isHalted.toggle()
                 }
                 .padding(.top, 7)
         }
@@ -204,6 +216,7 @@ struct VideoDetailsView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
+                .lineLimit(1)
             }
             Spacer()
         }

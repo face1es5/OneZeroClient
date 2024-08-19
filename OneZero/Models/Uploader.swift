@@ -16,6 +16,8 @@ class Uploader {
     static let shared = Uploader()
     private var baseURL = UserDefaults.standard.string(forKey: "api")!
     
+    private init() {}
+    
     /**
      Asynchronously upload **video** to **path**.
      */
@@ -24,10 +26,8 @@ class Uploader {
         await MainActor.run {
             video.uploading = true
         }
-        defer { Task { @MainActor in video.uploading = false } }
         
         print("Read Data of \(video.name)...")
-//        let data = try Data(contentsOf: video.url)
         guard
             let data = try? Data(contentsOf: video.url)
         else {
@@ -42,6 +42,10 @@ class Uploader {
             case let .failure(message):
                 print("Upload \(video.name) failed: \(message)")
             }
+        }
+        
+        await MainActor.run {
+            video.uploading = false
         }
     }
 
@@ -69,20 +73,25 @@ class Uploader {
 class UploadTaskGroup: Identifiable, ObservableObject {
     let id = UUID().uuidString
     let name: String
-    let description: String
     @Published var videos: [VideoItem]
     let destination: String
     @Published var isPaused = false
     @Published var isStarted = false
     @Published var isFinished = false
     @Published var isHalted = false
+    @Published var finishedNum: Double = 0
+    var totalNum: Double {
+        Double(videos.count)
+    }
+    private let startingMutex = NSLock()
     
     init(videos: [VideoItem], destination: String, isPaused: Bool = false) {
         self.videos = videos
         self.destination = destination
         self.isPaused = isPaused
-        self.name = "\(videos.count) to upload to \(destination)"
-        self.description = id
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        self.name = "\(dateFormatter.string(from: Date()))"
     }
     
     func pause() {
@@ -93,36 +102,35 @@ class UploadTaskGroup: Identifiable, ObservableObject {
         isPaused = false
     }
     
-    func pseudoUpload(video: VideoItem) async {
-        do {
-            try await Task.sleep(for: .seconds(3))
-            try await Task.sleep(for: .seconds(3))
-            print("Upload \(video.name) success.")
-        } catch {
-            print("Upload \(video.name) failed.")
-        }
-    }
-    
     // start uploading asynchronously
-    func start() async {
-        await MainActor.run {
-            isStarted = true
+    func start() {
+        print("Upload group \(name)")
+        isStarted = true
+        Task {
+            await withTaskGroup(of: Void.self) { taskGroup in
+                for video in videos {
+                    taskGroup.addTask {
+                        await Uploader.shared.upload(for: video, to: self.destination)
+                        await MainActor.run {
+                            self.finishedNum += 1
+                        }
+                    }
+                }
+            }
+            // all upload tasks done, set finished.
+            await MainActor.run {
+                isFinished = true
+            }
         }
-        for video in videos {
-            await pseudoUpload(video: video)
-        }
-        // all upload tasks done, set finished.
     }
-    
 }
 
 /// Manager for upload-groups, which means it holds a collection of UploadTasksGroup.
 ///
-/// - Traditionally, **processing procedure** should **run in a single thread**, any
+/// - Traditionally, **processing procedure** should **run in a single thread**, so hide this function and start it in private constructor.
 class UploadManager: ObservableObject {
     static let shared = UploadManager()
     @Published var taskGroups: [UploadTaskGroup] = []
-    private let mutex = NSLock()
     private let condition = NSCondition()   // condition to wake up processing thread
     private let taskQueue = DispatchQueue(label: "com.OneZero.uploadmanager.taskqueue", qos: .background)
     
@@ -143,41 +151,50 @@ class UploadManager: ObservableObject {
     
     func addTaskGroup(_ group: UploadTaskGroup) {
         // lock when new group append
-        mutex.lock()
+        condition.lock()
         taskGroups.append(group)
-        mutex.unlock()
+        condition.unlock()
         // wake up
         condition.signal()
     }
     
-    func processing() {
+    func removeTaskGroup(_ group: UploadTaskGroup) {
+        // lock
+        condition.lock()
+        if let idx = taskGroups.firstIndex(where: { $0.id == group.id }) {
+            taskGroups.remove(at: idx)
+        }
+        condition.unlock()
+    }
+    
+    /// Take first upload-group that not yet started and start it.
+    ///
+    /// - TODO: Fix multi-uploading, check synchronous state pass between taskgroup and manager. -> **Fixed**, this problem caused by running upload operation in task, which means update isStarted inside taskgroup's start func is asynchrously although change it in Main Thread, **i.e: Race condition will occur when uploading operation**(i mean total function, which means before making isStarted=true) **is hanged in background and processing thread re-fetch the first taskgroup**(as i just fetch the first group in queue, but even filter to fetch first group which isStarted=false is useless too, **because we don't make group's isStarted=true immediately after creating the group that start function of this group maybe hanged on background, so the timing of making isStarted=true is uncertain, and if it changed after re-fetching, same task-group will be started multi-times**.)
+    /// - TODO: handle pausing/halting
+    private func processing() {
         taskQueue.async { [weak self] in
             guard let self = self else { return }
             while true {    // process tasks.
-                mutex.lock()    // acquire lock to prevent break procedure of addTaskGroup
+                condition.lock()    // acquire lock to continue.
                 while taskGroups.isEmpty {
                     /**
                      If no task available, suspend processing thread until a signal that indicates
                      whether a new task is added or a existed task is requested to execute.
                      */
-                    mutex.unlock()
                     condition.wait()
-                    mutex.lock()
                 }
                 // now we have a task to run, take the first task group
-                guard let group = taskGroups.first else {   // task is not available, release mutex and continue to wait next task.
-                    mutex.unlock()
+                guard let group = taskGroups.first(where: {
+                    $0.isStarted == false
+                }) else {   // task is not available, release mutex and continue to wait next task.
+                    condition.unlock()
                     continue
                 }
                 // here we should check status of group ( started? paused? finished? halted?)
-                if !group.isStarted {
-                    Task {
-                        await group.start()
-                    }
-                } else if group.isFinished {
-                    taskGroups.removeFirst()
-                }   // TODO: else if paused/halted
-                mutex.unlock()
+                print("Start group \(group.name)")
+                group.start()
+                // TODO: handle pasuing/halting
+                condition.unlock()
             }
         }
     }

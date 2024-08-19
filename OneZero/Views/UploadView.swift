@@ -176,13 +176,6 @@ struct UploadView: View {
     func upload() async {
         if !selectionModel.hasSelection { print("No videos selected."); return }
         UploadManager.shared.uploadRequest(for: selectionModel.selectedItems, to: "api/upload")
-        return
-        // TODO: true uploading
-        for video in selectionModel {
-            Task {
-                await Uploader.shared.upload(for: video, to: "api/upload")
-            }
-        }
     }
 }
 
