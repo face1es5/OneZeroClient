@@ -14,7 +14,19 @@ struct MediaPreview: View {
         VStack {
             Text("\(media.name)").font(.title2)
             Label("\(media.url.urlDecode())", systemImage: "network")
-            VideoPlayer(player: AVPlayer(url: media.url))
+            media.thumbnail
+        }
+        .padding()
+    }
+}
+
+struct VideoPreview: View {
+    var video: VideoItem
+    var body: some View {
+        VStack {
+            Text("\(video.name)").font(.title2)
+            Label("\(video.url.urlDecode())", systemImage: "network")
+            VideoPlayer(player: AVPlayer(url: video.url))
         }
         .padding()
     }

@@ -23,6 +23,7 @@ struct UploadView: View {
     @State var selectionRect: CGRect = .zero
     @State var isSelecting: Bool = false
     @State private var videoFrames: [UUID: CGRect] = [:]
+    @State private var baseOffset: CGRect?
 
     var body: some View {
         ZStack {
@@ -82,10 +83,11 @@ struct UploadView: View {
                                             let offsetPoint = geo.frame(in: .global).origin
                                             // ... even not scroll, geo has an initial offset, so add it...
                                             let base = CGPoint(
-                                                x: offsetPoint.x - 201,
-                                                y: offsetPoint.y - 52
+                                                x: offsetPoint.x - (baseOffset?.minX ?? 0),
+                                                y: offsetPoint.y - (baseOffset?.minY ?? 0)
                                             )
-//                                            print("geo: \(base)")
+//                                            print("base geo: \(base)")
+//                                            print("offset geo: \(baseOffset ?? .zero)")
                                             
                                             let startPoint: CGPoint = CGPoint(
                                                 x: value.startLocation.x + base.x,
@@ -167,10 +169,25 @@ struct UploadView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .contextMenu {
-            Button("Clear all") {
+            Button("Select all") {
+                videosViewModel.selectAll()
+            }
+            .keyboardShortcut("a")
+            Button("Deselect all") {
+                videosViewModel.deSelectAll()
+            }
+            Button("Clear all items") {
                 videosViewModel.clear()
             }
         }
+        .background(
+            GeometryReader { geo in
+                Color.clear.onAppear {
+                    // Assign base offset of scrollview, **not completed**, it's only the initial coord of scrollview, but if change size of scrollview(like, move splitter of leftsidebar), it will be incorrect, but next time when app restarts or view re-appear it's correct(as it reads initial coord every time on appear).
+                    baseOffset = geo.frame(in: .global)
+                }
+            }
+        )
     }
 
     func upload() async {

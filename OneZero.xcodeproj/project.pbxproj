@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CF000F0C2C74BEC3004019BF /* TaskGroupPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF000F0B2C74BEC3004019BF /* TaskGroupPreview.swift */; };
 		CF0602CF2C7118AF00265292 /* VideoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0602CE2C7118AF00265292 /* VideoGalleryView.swift */; };
 		CF3F6A372C67AA65007079E8 /* UploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3F6A362C67AA65007079E8 /* UploadView.swift */; };
 		CF3F6A392C67AC6B007079E8 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3F6A382C67AC6B007079E8 /* GalleryView.swift */; };
@@ -35,6 +36,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CF000F0B2C74BEC3004019BF /* TaskGroupPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskGroupPreview.swift; sourceTree = "<group>"; };
 		CF0602CE2C7118AF00265292 /* VideoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoGalleryView.swift; sourceTree = "<group>"; };
 		CF1CF3942C6C720B00D689D0 /* OneZeroDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneZeroDebug.entitlements; sourceTree = "<group>"; };
 		CF3F6A362C67AA65007079E8 /* UploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadView.swift; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				CF41EDBA2C721D3000A07A59 /* MediaPreview.swift */,
+				CF000F0B2C74BEC3004019BF /* TaskGroupPreview.swift */,
 			);
 			path = Previews;
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 				CFE688A72C6DD6B60081B70E /* Uploader.swift in Sources */,
 				CF41EDBB2C721D3000A07A59 /* MediaPreview.swift in Sources */,
 				CFD77B162C73A55A00AF0D82 /* UploadTaskView.swift in Sources */,
+				CF000F0C2C74BEC3004019BF /* TaskGroupPreview.swift in Sources */,
 				CFD77B1A2C73A65400AF0D82 /* Form_Ext.swift in Sources */,
 				CF0602CF2C7118AF00265292 /* VideoGalleryView.swift in Sources */,
 				CFDD8D752C64FA1A0048D9F5 /* OneZeroApp.swift in Sources */,

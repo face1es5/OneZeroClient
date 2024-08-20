@@ -19,20 +19,23 @@ struct DetailsView: View {
                 .badge(2)
                 .padding()
             if selectionModel.selectedItem != nil {
-                MediaDetailsView(video: selectionModel.selectedItem!)
+                MediaDetailsView(media: selectionModel.selectedItem!)
                     .tabItem {
                         Label("Media detail", systemImage: "mediastick")
                     }
                     .badge(2)
                     .padding()
             } else {
-                Text("No video selected.")
-                    .font(.title2)
-                    .tabItem {
-                        Label("Media detail", systemImage: "mediastick")
-                    }
-                    .badge(2)
-                    .padding()
+                VStack {
+                    Text("No video selected.")
+                        .font(.title2)
+                    Spacer()
+                }
+                .tabItem {
+                    Label("Media detail", systemImage: "mediastick")
+                }
+                .badge(2)
+                .padding()
             }
 
             CollectionView()

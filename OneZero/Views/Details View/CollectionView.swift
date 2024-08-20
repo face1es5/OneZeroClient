@@ -8,9 +8,12 @@
 import SwiftUI
 
 /// View for a collection of selected items.
+///
 struct CollectionView: View {
     @EnvironmentObject var selectionModel: SelectionModel<VideoItem>
     @State var totalSize: String = "Loading..."
+    @State var title: String = ""
+    @State var description: String = ""
     
     var body: some View {
         ScrollView {
@@ -19,6 +22,11 @@ struct CollectionView: View {
                 Text("\(selectionModel.count)")
             }
             .font(.title2)
+            Form {
+                TextField("Title:", text: $title)
+                TextField("Description:", text: $description, axis: .vertical)
+                    .lineLimit(10)
+            }
             DisclosureGroup("info") {
                 Form {
                     Field(key: "Total size", value: "\(totalSize)")

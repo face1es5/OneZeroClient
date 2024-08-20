@@ -20,11 +20,18 @@ class Uploader {
     
     /**
      Asynchronously upload **video** to **path**.
+     Return true if success, false if failed.
      */
-    func upload(for video: VideoItem, to path: String) async {
+    func upload(for video: VideoItem, to path: String) async -> Bool {
         let url = "\(baseURL)/\(path)"
         await MainActor.run {
             video.uploading = true
+        }
+        
+        do { try await Task.sleep(for: .seconds(3)) } catch {}
+        
+        defer {
+            Task { @MainActor in video.uploading = false }
         }
         
         print("Read Data of \(video.name)...")
@@ -32,29 +39,35 @@ class Uploader {
             let data = try? Data(contentsOf: video.url)
         else {
             print("Read \(video.name) failed. Upload terminated.")
-            return
+            return false
         }
         print("Ready to post \(video.name) on \(url)")
-        await APIService(to: url).postVideo(for: data, name: video.name) { result in
-            switch result {
-            case let .success(message):
-                print("Upload \(video.name) success: \(message).")
-            case let .failure(message):
-                print("Upload \(video.name) failed: \(message)")
+        let result = await APIService(to: url).postVideo(for: data, name: video.name)
+        switch result {
+        case let .success(message):
+            await MainActor.run { video.failedToUploading = false }
+            print("Upload \(video.name) success: \(message).")
+            return true
+        case let .failure(error):
+            print("Upload \(video.name) failed: \(error)")
+            await MainActor.run {
+                if let apiError = error as? APIError {
+                    video.errorHint = apiError.errorDescription
+                } else {
+                    video.errorHint = error.localizedDescription
+                }
+                video.failedToUploading = true
             }
-        }
-        
-        await MainActor.run {
-            video.uploading = false
+            return false
         }
     }
 
     /**
      Upload video **from** localPath and **to** serverPath.
      */
-    func upload(from localPath: String, to serverPath: String) async {
+    func upload(from localPath: String, to serverPath: String) async -> Bool {
         async let video = VideoItem(from: localPath)
-        await upload(for: video, to: serverPath)
+        return await upload(for: video, to: serverPath)
     }
     
     /**
@@ -80,6 +93,7 @@ class UploadTaskGroup: Identifiable, ObservableObject {
     @Published var isFinished = false
     @Published var isHalted = false
     @Published var finishedNum: Double = 0
+    @Published var failedNum: Int = 0
     var totalNum: Double {
         Double(videos.count)
     }
@@ -110,9 +124,10 @@ class UploadTaskGroup: Identifiable, ObservableObject {
             await withTaskGroup(of: Void.self) { taskGroup in
                 for video in videos {
                     taskGroup.addTask {
-                        await Uploader.shared.upload(for: video, to: self.destination)
-                        await MainActor.run {
+                        let success = await Uploader.shared.upload(for: video, to: self.destination)
+                        DispatchQueue.main.async {
                             self.finishedNum += 1
+                            if !success { self.failedNum += 1 }
                         }
                     }
                 }
@@ -132,7 +147,7 @@ class UploadManager: ObservableObject {
     static let shared = UploadManager()
     @Published var taskGroups: [UploadTaskGroup] = []
     private let condition = NSCondition()   // condition to wake up processing thread
-    private let taskQueue = DispatchQueue(label: "com.OneZero.uploadmanager.taskqueue", qos: .background)
+    private let uploadTaskQueue = DispatchQueue(label: "com.OneZero.uploadmanager.taskqueue", qos: .background)
     
     // singleton, and start processing
     private init() {
@@ -172,7 +187,7 @@ class UploadManager: ObservableObject {
     /// - TODO: Fix multi-uploading, check synchronous state pass between taskgroup and manager. -> **Fixed**, this problem caused by running upload operation in task, which means update isStarted inside taskgroup's start func is asynchrously although change it in Main Thread, **i.e: Race condition will occur when uploading operation**(i mean total function, which means before making isStarted=true) **is hanged in background and processing thread re-fetch the first taskgroup**(as i just fetch the first group in queue, but even filter to fetch first group which isStarted=false is useless too, **because we don't make group's isStarted=true immediately after creating the group that start function of this group maybe hanged on background, so the timing of making isStarted=true is uncertain, and if it changed after re-fetching, same task-group will be started multi-times**.)
     /// - TODO: handle pausing/halting
     private func processing() {
-        taskQueue.async { [weak self] in
+        uploadTaskQueue.async { [weak self] in
             guard let self = self else { return }
             while true {    // process tasks.
                 condition.lock()    // acquire lock to continue.

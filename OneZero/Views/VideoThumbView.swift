@@ -40,7 +40,7 @@ struct VideoThumbView: View {
                     .cornerRadius(5)
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
-                            .stroke(video.isSelected ? .gray.opacity(0.5) : Color.clear, lineWidth: 16)
+                            .stroke(video.isSelected ? .gray.opacity(0.5) : Color.clear, lineWidth: 10)
                     )
                 Text(video.name)
                     .padding(2)
@@ -64,8 +64,7 @@ struct VideoThumbView: View {
         )
         .contextMenu {
             Button("Preview") { // popover to preview media
-                print("preview.")
-                let preview = MediaPreview(media: video)
+                let preview = VideoPreview(video: video)
                 let hostingController = NSHostingController(rootView: preview)
                 let popover = NSPopover()
                 popover.contentViewController = hostingController
@@ -92,15 +91,8 @@ struct VideoThumbView: View {
     }
 }
 
-struct TestThumbView: View {
-    @State var video = VideoItem(from: "file:///Users/fish/Desktop/sample.mp4")
-    var body: some View {
-        VideoThumbView(video: video)
-    }
-}
-
 struct VideoThumbView_Previews: PreviewProvider {
     static var previews: some View {
-        TestThumbView()
+        EmptyView()
     }
 }

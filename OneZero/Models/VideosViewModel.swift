@@ -29,6 +29,22 @@ class VideosViewModel: ObservableObject {
         selectionModel = model
     }
     
+    /// Select all items, it's expensive.
+    func selectAll() {
+        for video in videos {
+            video.isSelected = true
+        }
+        selectionModel?.select(videos)
+    }
+    
+    /// Deselect all items, expensive too.
+    func deSelectAll() {
+        for video in videos {
+            video.isSelected = false
+        }
+        selectionModel?.deselect()
+    }
+    
     private func filterMedia() async -> [VideoItem] {
         guard !searchString.isEmpty else { return videos }
         return videos.filter {

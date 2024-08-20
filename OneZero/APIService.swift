@@ -49,10 +49,9 @@ class APIService {
         }
     }
 
-    func postVideo(for videoData: Data, name filename: String, completion: @escaping (Result<String, Error>) -> Void) async {
+    func postVideo(for videoData: Data, name filename: String) async -> Result<String, Error> {
         guard let url = URL(string: addr) else {
-            completion(.failure(APIError.invalidURL))
-            return
+            return .failure(APIError.invalidURL)
         }
         var req = URLRequest(url: url)
         req.httpMethod = "POST"
@@ -75,32 +74,23 @@ class APIService {
         req.httpBody = body
 
         // send
-        URLSession.shared.dataTask(with: req) { data, response, error in
+        do {
+            let (data, response) = try await URLSession.shared.data(for: req)
             guard
-                let data = data,
-                let response = response as? HTTPURLResponse,
-                error == nil
+                let httpResponse = response as? HTTPURLResponse,
+                (200...299) ~= httpResponse.statusCode
             else {
-                print("error", error ?? URLError(.badServerResponse))
-                completion(.failure(error ?? URLError(.badServerResponse)))
-                return
+                return .failure(APIError.invalidResponseCode((response as? HTTPURLResponse)?.statusCode ?? 500))
             }
-
-            guard (200 ... 299) ~= response.statusCode else {
-                print("Status code should be 2xx, but is \(response.statusCode)")
-                print("response = \(response)")
-                completion(.failure(APIError.invalidResponseCode(response.statusCode)))
-                return
-            }
-
             guard let resMessage = String(data: data, encoding: .utf8) else {
-                completion(.failure(APIError.corruptData))
-                return
+                return .failure(APIError.corruptData)
             }
-
-            completion(.success(resMessage))
-
-        }.resume()
+            return .success(resMessage)
+        } catch let urlError as URLError {
+            return .failure(APIError.urlError(urlError.localizedDescription))
+        } catch {
+            return .failure(error)
+        }
     }
 }
 
@@ -108,6 +98,7 @@ enum APIError: Error, LocalizedError {
     case invalidURL
     case invalidResponseStatus
     case invalidResponseCode(Int)
+    case urlError(String)
     case dataTaskError(String)
     case corruptData
     case decodingError(String)
@@ -119,12 +110,14 @@ enum APIError: Error, LocalizedError {
         case .invalidResponseStatus:
             return NSLocalizedString("Invalid response or response code.", comment: "")
         case let .invalidResponseCode(code):
-            return NSLocalizedString("Invalid response code: \(code)", comment: "")
+            return NSLocalizedString("Invalid response code", comment: "") + " - \(code)."
         case let .dataTaskError(string):
             return string
         case .corruptData:
             return NSLocalizedString("Received data appears to be corrput.", comment: "")
         case let .decodingError(string):
+            return string
+        case let .urlError(string):
             return string
         }
     }

@@ -12,20 +12,25 @@ import AVKit
 ///
 /// TODO: support image.
 struct MediaDetailsView: View {
-    @ObservedObject var video: VideoItem
+    @ObservedObject var mediaItem: VideoItem
+    @State var player: AVPlayer
+    init(media: VideoItem) {
+        mediaItem = media
+        player = AVPlayer(url: media.url)
+    }
     var body: some View {
         ScrollView {
             HStack {
-                Label(video.name, systemImage: "folder.fill")
+                Label(mediaItem.name, systemImage: "folder.fill")
                 .font(.title2)
                 .help("Open file")
                 .onTapGesture {
-                    NSWorkspace.shared.open(video.url)
+                    NSWorkspace.shared.open(mediaItem.url)
                 }
                 Button(action: {
                     do {
-                        if try video.url.checkResourceIsReachable() {
-                            NSWorkspace.shared.open(video.url.deletingLastPathComponent())
+                        if try mediaItem.url.checkResourceIsReachable() {
+                            NSWorkspace.shared.open(mediaItem.url.deletingLastPathComponent())
                         }
                     } catch {}
                 }) {
@@ -38,18 +43,23 @@ struct MediaDetailsView: View {
             }
 
             Form {
-                TextField("title:", text: $video.title)
-                TextField("description:", text: $video.description)
+                TextField("Video title:", text: $mediaItem.title)
+                TextField("Description:", text: $mediaItem.description, axis: .vertical)
+                    .lineLimit(5)
+                
             }
-            VideoPlayer(player: AVPlayer(url: video.url))
+            VideoPlayer(player: player)
+                .onChange(of: mediaItem.url) { url in
+                    player = AVPlayer(url: url)
+                }
                 .frame(height: 200)
             DisclosureGroup("meta") {
                 Form {
-                    Field(key: "Size", value: video.meta.formattedSize)
-                    Field(key: "Duration(secs)", value: video.meta.duration)
-                    Field(key: "Resolution", value: video.meta.resolution)
-                    Field(key: "Creation date", value: video.meta.creationDate)
-                    Field(key: "Full path", value: video.url.urlDecode())
+                    Field(key: "Size", value: mediaItem.meta.formattedSize)
+                    Field(key: "Duration(secs)", value: mediaItem.meta.duration)
+                    Field(key: "Resolution", value: mediaItem.meta.resolution)
+                    Field(key: "Creation date", value: mediaItem.meta.creationDate)
+                    Field(key: "Full path", value: mediaItem.url.urlDecode())
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
