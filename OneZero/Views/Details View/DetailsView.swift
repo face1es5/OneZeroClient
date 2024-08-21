@@ -9,7 +9,7 @@ import SwiftUI
 import AVKit
 
 struct DetailsView: View {
-    @EnvironmentObject var selectionModel: SelectionModel<VideoItem>
+    @EnvironmentObject var selectionModel: SelectionModel<MediaItem>
     var body: some View {
         TabView {
             UploadTaskView()
@@ -27,7 +27,7 @@ struct DetailsView: View {
                     .padding()
             } else {
                 VStack {
-                    Text("No video selected.")
+                    Text("No item selected.")
                         .font(.title2)
                     Spacer()
                 }

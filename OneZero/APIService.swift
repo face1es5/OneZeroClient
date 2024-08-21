@@ -49,7 +49,7 @@ class APIService {
         }
     }
 
-    func postVideo(for videoData: Data, name filename: String) async -> Result<String, Error> {
+    func postMedia(for mediaData: Data, name filename: String, extension suffix: String) async -> Result<String, Error> {
         guard let url = URL(string: addr) else {
             return .failure(APIError.invalidURL)
         }
@@ -62,12 +62,12 @@ class APIService {
 
         // set body
         var body = Data()
-        let mimeType = "video/mp4"
+        let mimeType = MediaFactory.mimeType(suffix)
         body.append("--\(boundary)\r\n")
-        body.append("Content-Disposition: form-data; name=\"video\"; filename*=UTF-8''\(filename.urlEncode())\r\n")
+        body.append("Content-Disposition: form-data; name=\"media\"; filename*=UTF-8''\(filename.urlEncode())\r\n")
         body.append("Content-Type: \(mimeType)\r\n")
         body.append("\r\n")
-        body.append(videoData)
+        body.append(mediaData)
         body.append("\r\n")
         body.append("--\(boundary)--\r\n")
 

@@ -1,5 +1,5 @@
 //
-//  VideoThumbView.swift
+//  MediaThumbView.swift
 //  OneZero
 //
 //  Created by Fish on 14/8/2024.
@@ -8,20 +8,20 @@
 import AVFoundation
 import SwiftUI
 
-struct VideoThumbView: View {
-    @ObservedObject var video: VideoItem
+struct MediaThumbView: View {
+    @ObservedObject var media: MediaItem
     @State var frame: CGRect = .zero
     
     var body: some View {
         ZStack(alignment: .center) {
-            if video.uploading {
+            if media.uploading {
                 ProgressView()
                     .zIndex(1)
             }
             VStack(spacing: 10) {
-                if video.loadingThumb {
+                if media.loadingThumb {
                     ProgressView()
-                } else if video.thumbnail == nil {
+                } else if media.thumbnail == nil {
                     Button(action: {
                         refreshThumbnail()
                     }) {
@@ -32,20 +32,20 @@ struct VideoThumbView: View {
                     }
                     .buttonStyle(PlainButtonStyle())
                 }
-                video.thumbnail?
+                media.thumbnail?
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .blur(radius: video.uploading ? 10 : 0)
+                    .blur(radius: media.uploading ? 10 : 0)
                     .padding()
                     .cornerRadius(5)
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
-                            .stroke(video.isSelected ? .gray.opacity(0.5) : Color.clear, lineWidth: 10)
+                            .stroke(media.isSelected ? .gray.opacity(0.5) : Color.clear, lineWidth: 10)
                     )
-                Text(video.name)
+                Text(media.name)
                     .padding(2)
                     .cornerRadius(10)
-                    .background(video.isSelected ? .accentColor.opacity(0.5) : Color.clear)
+                    .background(media.isSelected ? .accentColor.opacity(0.5) : Color.clear)
             }
             .padding()
             .task {
@@ -56,7 +56,7 @@ struct VideoThumbView: View {
         .background(
             GeometryReader { geo in
                 Color.clear
-                    .preference(key: VideoFrameKey.self, value: [video.id: geo.frame(in: .global)])
+                    .preference(key: MediaFrameKey.self, value: [media.id: geo.frame(in: .global)])
                     .onAppear {
                         frame = geo.frame(in: .global)
                     }
@@ -64,34 +64,34 @@ struct VideoThumbView: View {
         )
         .contextMenu {
             Button("Preview") { // popover to preview media
-                let preview = VideoPreview(video: video)
+                let preview = MediaPreview(media: media)
                 let hostingController = NSHostingController(rootView: preview)
                 let popover = NSPopover()
                 popover.contentViewController = hostingController
                 popover.behavior = .transient
                 if let wind = NSApp.mainWindow {
-                    popover.show(relativeTo: frame, of: wind.contentView!, preferredEdge: .minY)
+                    popover.show(relativeTo: frame, of: wind.contentView!, preferredEdge: .maxX)
                 }
             }
-            Button("Upload") {  // upload selected video
-                UploadManager.shared.uploadRequest(for: video, to: "api/upload")
+            Button("Upload") {  // upload selected media
+                UploadManager.shared.uploadRequest(for: media, to: "api/upload")
             }
             Divider()
             Button("Refresh thumbnail") {   //  force to refresh thumbnail
                 refreshThumbnail(true)
             }
         }
-        .disabled(!video.isSelected)
+        .disabled(!media.isSelected)
     }
     
     func refreshThumbnail(_ force: Bool = false) {
-        if video.thumbnail == nil || force {
-            Task { await video.genThumbnail() }
+        if media.thumbnail == nil || force {
+            Task { await media.genThumbnail() }
         }
     }
 }
 
-struct VideoThumbView_Previews: PreviewProvider {
+struct MediaThumbView_Previews: PreviewProvider {
     static var previews: some View {
         EmptyView()
     }

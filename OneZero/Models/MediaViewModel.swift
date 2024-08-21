@@ -1,5 +1,5 @@
 //
-//  VideosViewModel.swift
+//  MediaViewModel.swift
 //  OneZero
 //
 //  Created by Fish on 14/8/2024.
@@ -10,9 +10,9 @@ import Foundation
 /// A View Model holds a collection of media, **also it has a internal selectionModel reference**.
 ///
 /// **Any modification on internal items will clear selection.**
-class VideosViewModel: ObservableObject {
-    private var selectionModel: SelectionModel<VideoItem>?
-    @Published var videos: [VideoItem] = [] {
+class MediaViewModel: ObservableObject {
+    private var selectionModel: SelectionModel<MediaItem>?
+    @Published var someMedia: [MediaItem] = [] {
         didSet {
             Task { await doFilter() }
             selectionModel?.clear()
@@ -23,31 +23,31 @@ class VideosViewModel: ObservableObject {
             Task { await doFilter() }
         }
     }
-    @Published var filteredMedia: [VideoItem] = []
+    @Published var filteredMedia: [MediaItem] = []
     
-    func setSelectionModel(_ model: SelectionModel<VideoItem>) {
+    func setSelectionModel(_ model: SelectionModel<MediaItem>) {
         selectionModel = model
     }
     
     /// Select all items, it's expensive.
     func selectAll() {
-        for video in videos {
-            video.isSelected = true
+        for media in someMedia {
+            media.isSelected = true
         }
-        selectionModel?.select(videos)
+        selectionModel?.select(someMedia)
     }
     
     /// Deselect all items, expensive too.
     func deSelectAll() {
-        for video in videos {
-            video.isSelected = false
+        for media in someMedia {
+            media.isSelected = false
         }
         selectionModel?.deselect()
     }
     
-    private func filterMedia() async -> [VideoItem] {
-        guard !searchString.isEmpty else { return videos }
-        return videos.filter {
+    private func filterMedia() async -> [MediaItem] {
+        guard !searchString.isEmpty else { return someMedia }
+        return someMedia.filter {
             $0.name.lowercased().contains(searchString.lowercased())
         }
     }
@@ -62,13 +62,15 @@ class VideosViewModel: ObservableObject {
     }
     
     func load(from urls: [URL]) {
-        videos = urls.map { VideoItem(from: $0) }
+        someMedia = urls.map { MediaFactory.createMedia(from: $0) }
     }
 
     func load(from urls: [String]) {
-        videos = urls.map { VideoItem(from: $0) }
+        someMedia = urls.map { MediaFactory.createMedia(from: $0) }
     }
 
-    func count() -> Int { return videos.count }
-    func clear() { videos = [] }
+    func count() -> Int { return someMedia.count }
+    func clear() { someMedia = [] }
 }
+
+

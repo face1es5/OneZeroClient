@@ -10,7 +10,7 @@ import SwiftUI
 /// View for a collection of selected items.
 ///
 struct CollectionView: View {
-    @EnvironmentObject var selectionModel: SelectionModel<VideoItem>
+    @EnvironmentObject var selectionModel: SelectionModel<MediaItem>
     @State var totalSize: String = "Loading..."
     @State var title: String = ""
     @State var description: String = ""

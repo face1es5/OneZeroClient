@@ -10,13 +10,12 @@ import AVKit
 
 /// Media Details View for video&image.
 ///
-/// TODO: support image.
 struct MediaDetailsView: View {
-    @ObservedObject var mediaItem: VideoItem
-    @State var player: AVPlayer
-    init(media: VideoItem) {
+    @ObservedObject var mediaItem: MediaItem
+    @State var player: AVPlayer = AVPlayer()
+    @State var showPreview: Bool = false
+    init(media: MediaItem) {
         mediaItem = media
-        player = AVPlayer(url: media.url)
     }
     var body: some View {
         ScrollView {
@@ -43,16 +42,36 @@ struct MediaDetailsView: View {
             }
 
             Form {
-                TextField("Video title:", text: $mediaItem.title)
+                TextField("Media title:", text: $mediaItem.title)
                 TextField("Description:", text: $mediaItem.description, axis: .vertical)
                     .lineLimit(5)
                 
             }
-            VideoPlayer(player: player)
-                .onChange(of: mediaItem.url) { url in
-                    player = AVPlayer(url: url)
-                }
-                .frame(height: 200)
+            if mediaItem is VideoItem {
+                VideoPlayer(player: player)
+                    .onAppear {
+                        player = AVPlayer(url: mediaItem.url)
+                    }
+                    .onDisappear {
+                        player.pause()
+                    }
+                    .onChange(of: mediaItem.url) { newURL in
+                        player = AVPlayer(url: newURL)
+                    }
+                    .frame(height: 200)
+            } else {
+                mediaItem.thumbnail?
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 200, height: 200)
+                    .popover(isPresented: $showPreview, arrowEdge: .leading) {
+                        MediaPreview(media: mediaItem)
+                    }
+                    .onHover { hovering in
+                        showPreview = hovering
+                    }
+            }
+
             DisclosureGroup("meta") {
                 Form {
                     Field(key: "Size", value: mediaItem.meta.formattedSize)
@@ -60,6 +79,7 @@ struct MediaDetailsView: View {
                     Field(key: "Resolution", value: mediaItem.meta.resolution)
                     Field(key: "Creation date", value: mediaItem.meta.creationDate)
                     Field(key: "Full path", value: mediaItem.url.urlDecode())
+                        .help(mediaItem.url.urlDecode())
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
@@ -67,27 +87,6 @@ struct MediaDetailsView: View {
             }
             Spacer()
         }
-
-    }
-}
-
-struct VideoDetailsDemo: View {
-    @State var video = VideoItem(from: "/Users/fish/Desktop/dodo.mp4")
-    @State var isExpanded = false
-    var body: some View {
-        VStack(alignment: .leading) {
-            Form {
-                Text(video.name)
-                    .font(.title2)
-                TextField("title:", text: $video.title)
-                TextField("description:", text: $video.description)
-                DisclosureGroup("meta") {
-                    Text("duration: \(video.meta.duration)")
-                }
-                Spacer()
-            }
-        }
-        .frame(width: 200)
     }
 }
 

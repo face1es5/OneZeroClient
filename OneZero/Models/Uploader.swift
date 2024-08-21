@@ -7,74 +7,74 @@
 
 import Foundation
 
-/// Singleton for uploading videos. Server's api is holding internal(UserDefaults).
+/// Singleton for uploading media. Server's api is holding internal(UserDefaults).
 ///
-/// - upload(for video: VideoItem, to path: String): read data and upload to server asynchronously.
-/// - upload(from localPath: String, to serverPath: String): wrapper for upload(for video, to path), which localPath is a string.
-/// - uploadVideos(_ videos: [String], to serverPath: String): wrapper for upload(from localPath, to serverPath) that uploads a series of videos.
+/// - upload(for media: MediaItem, to path: String): read data and upload to server asynchronously.
+/// - upload(from localPath: String, to serverPath: String): wrapper for upload(for media, to path), which localPath is a string.
+/// - uploadSomeMedia(_ medias: [String], to serverPath: String): wrapper for upload(from localPath, to serverPath) that uploads a series of media.
 class Uploader {
     static let shared = Uploader()
-    private var baseURL = UserDefaults.standard.string(forKey: "api")!
+    private var baseURL = UserDefaults.standard.string(forKey: "api") ?? "what://"
     
     private init() {}
     
     /**
-     Asynchronously upload **video** to **path**.
+     Asynchronously upload **media** to **path**.
      Return true if success, false if failed.
      */
-    func upload(for video: VideoItem, to path: String) async -> Bool {
+    func upload(for media: MediaItem, to path: String) async -> Bool {
         let url = "\(baseURL)/\(path)"
         await MainActor.run {
-            video.uploading = true
+            media.uploading = true
         }
         
         do { try await Task.sleep(for: .seconds(3)) } catch {}
         
         defer {
-            Task { @MainActor in video.uploading = false }
+            Task { @MainActor in media.uploading = false }
         }
         
-        print("Read Data of \(video.name)...")
+        print("Read Data of \(media.name)...")
         guard
-            let data = try? Data(contentsOf: video.url)
+            let data = try? Data(contentsOf: media.url)
         else {
-            print("Read \(video.name) failed. Upload terminated.")
+            print("Read \(media.name) failed. Upload terminated.")
             return false
         }
-        print("Ready to post \(video.name) on \(url)")
-        let result = await APIService(to: url).postVideo(for: data, name: video.name)
+        print("Ready to post \(media.name) on \(url)")
+        let result = await APIService(to: url).postMedia(for: data, name: media.name, extension: media.url.pathExtension)
         switch result {
         case let .success(message):
-            await MainActor.run { video.failedToUploading = false }
-            print("Upload \(video.name) success: \(message).")
+            await MainActor.run { media.failedToUploading = false }
+            print("Upload \(media.name) success: \(message).")
             return true
         case let .failure(error):
-            print("Upload \(video.name) failed: \(error)")
+            print("Upload \(media.name) failed: \(error)")
             await MainActor.run {
                 if let apiError = error as? APIError {
-                    video.errorHint = apiError.errorDescription
+                    media.errorHint = apiError.errorDescription
                 } else {
-                    video.errorHint = error.localizedDescription
+                    media.errorHint = error.localizedDescription
                 }
-                video.failedToUploading = true
+                media.failedToUploading = true
             }
             return false
         }
     }
 
     /**
-     Upload video **from** localPath and **to** serverPath.
+     Upload media **from** localPath and **to** serverPath.
      */
     func upload(from localPath: String, to serverPath: String) async -> Bool {
-        async let video = VideoItem(from: localPath)
-        return await upload(for: video, to: serverPath)
+        async let media = MediaItem(from: localPath)
+        return await upload(for: media, to: serverPath)
     }
     
     /**
-     Upload videos **to** serverPath in parallel.
+     Upload media in paths **to** serverPath in parallel.
      */
-    func uploadVideos(_ videos: [String], to serverPath: String) async {
-        for path in videos {
+    func uploadSomeMedia(_ paths: [String], to serverPath: String) async {
+        for path in paths {
             Task {
                 await Uploader.shared.upload(from: path, to: serverPath)
             }
@@ -82,11 +82,11 @@ class Uploader {
     }
 }
 
-/// Class that holds a group of related tasks(like uploading videos from a range selection).
+/// Class that holds a group of related tasks(like uploading some media from a range selection).
 class UploadTaskGroup: Identifiable, ObservableObject {
     let id = UUID().uuidString
     let name: String
-    @Published var videos: [VideoItem]
+    @Published var mediaItems: [MediaItem]
     let destination: String
     @Published var isPaused = false
     @Published var isStarted = false
@@ -95,12 +95,12 @@ class UploadTaskGroup: Identifiable, ObservableObject {
     @Published var finishedNum: Double = 0
     @Published var failedNum: Int = 0
     var totalNum: Double {
-        Double(videos.count)
+        Double(mediaItems.count)
     }
     private let startingMutex = NSLock()
     
-    init(videos: [VideoItem], destination: String, isPaused: Bool = false) {
-        self.videos = videos
+    init(mediaItems: [MediaItem], destination: String, isPaused: Bool = false) {
+        self.mediaItems = mediaItems
         self.destination = destination
         self.isPaused = isPaused
         let dateFormatter = DateFormatter()
@@ -122,9 +122,9 @@ class UploadTaskGroup: Identifiable, ObservableObject {
         isStarted = true
         Task {
             await withTaskGroup(of: Void.self) { taskGroup in
-                for video in videos {
+                for media in mediaItems {
                     taskGroup.addTask {
-                        let success = await Uploader.shared.upload(for: video, to: self.destination)
+                        let success = await Uploader.shared.upload(for: media, to: self.destination)
                         DispatchQueue.main.async {
                             self.finishedNum += 1
                             if !success { self.failedNum += 1 }
@@ -154,14 +154,14 @@ class UploadManager: ObservableObject {
         processing()
     }
     
-    func uploadRequest(for video: VideoItem, to path: String) {
-        addTaskGroup(UploadTaskGroup(videos: [video], destination: path))
+    func uploadRequest(for mediaItem: MediaItem, to path: String) {
+        addTaskGroup(UploadTaskGroup(mediaItems: [mediaItem], destination: path))
     }
-    func uploadRequest(for videos: [VideoItem], to path: String) {
-        addTaskGroup(UploadTaskGroup(videos: videos, destination: path))
+    func uploadRequest(for mediaItems: [MediaItem], to path: String) {
+        addTaskGroup(UploadTaskGroup(mediaItems: mediaItems, destination: path))
     }
-    func uploadRequest(for videos: Set<VideoItem>, to path: String) {
-        uploadRequest(for: Array(videos), to: path)
+    func uploadRequest(for mediaItems: Set<MediaItem>, to path: String) {
+        uploadRequest(for: Array(mediaItems), to: path)
     }
     
     func addTaskGroup(_ group: UploadTaskGroup) {

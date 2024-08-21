@@ -17,9 +17,9 @@ struct GalleryView: View {
         .toolbar {
             ToolbarItemGroup {
                 Button(action: { withAnimation { appViewModel.showRightPanel.toggle() } }) {
-                    Label("Show/Hide right panel", systemImage: "sidebar.right")
+                    Label("Show or Hide right panel", systemImage: "sidebar.right")
                 }
-                .help("Show/Hide right panel")
+                .help("Show or Hide right panel")
                 .keyboardShortcut("s", modifiers: .command)
             }
         }

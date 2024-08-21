@@ -1,18 +1,19 @@
 //
-//  VideoItem.swift
+//  MediaItem.swift
 //  OneZero
 //
-//  Created by Fish on 14/8/2024.
+//  Created by Fish on 21/8/2024.
 //
 
 import Foundation
 import SwiftUI
 import AVFoundation
+import QuickLookThumbnailing
 
 /**
- Class that hold some meta info for a specific video item.
+ Class that hold some meta info for a specific media item.
  */
-class VideoAsset: ObservableObject {
+class MediaAsset: ObservableObject {
     var size: Int64 = .zero
     @Published var formattedSize: String = "loading..."
     @Published var duration: String = "loading..."
@@ -73,39 +74,41 @@ class VideoAsset: ObservableObject {
     }
 }
 
-class VideoItem: Identifiable, Hashable, ObservableObject {
+/// Base class for Video&Image.
+///
+class MediaItem: Identifiable, Hashable, ObservableObject, Equatable {
     let id = UUID()
     let url: URL
     let name: String
     var thumbnail: Image? = nil
     var errorHint: String?
-    @ObservedObject var meta: VideoAsset
+    @ObservedObject var meta: MediaAsset
     @Published var isSelected: Bool = false
     @Published var loadingThumb: Bool = true
     @Published var uploading: Bool = false
     @Published var failedToUploading: Bool = false
     @Published var description: String = ""
     @Published var title: String = ""
-
+    
     /**
-     Init video item from URL struct.
+     Init media item from URL struct.
      */
     init(from url: URL) {
         self.url = url
         name = url.lastPathComponent
-        meta = VideoAsset(from: url)
+        meta = MediaAsset(from: url)
     }
 
     /**
-     Init video item from url string(local or remote).
+     Init media item from url string(local or remote).
      */
     init(from urlString: String) {
         url = URL(fileURLWithPath: urlString)
         name = url.lastPathComponent
-        meta = VideoAsset(from: url)
+        meta = MediaAsset(from: url)
     }
     
-    static func == (lhs: VideoItem, rhs: VideoItem) -> Bool {
+    static func == (lhs: MediaItem, rhs: MediaItem) -> Bool {
         return lhs.id == rhs.id || lhs.url.absoluteString == rhs.url.absoluteString
     }
 
@@ -113,10 +116,39 @@ class VideoItem: Identifiable, Hashable, ObservableObject {
         hasher.combine(url.absoluteString)
     }
     
+    func genThumbnail() async {
+        fatalError("You must implement genThumbnail in sub class.")
+    }
+    
+}
+
+/// Image item.
+///
+class ImageItem: MediaItem {
+    override func genThumbnail() async {
+        DispatchQueue.main.async {
+            self.loadingThumb = true
+        }
+        defer {
+            DispatchQueue.main.async {
+                self.loadingThumb = false
+            }
+        }
+        guard let nsimg = NSImage(contentsOf: url) else {
+            print("Can't generating thumnail for image \(name) of url: \(url)")
+            return
+        }
+        thumbnail = Image(nsImage: nsimg)
+    }
+}
+
+/// Video item.
+///
+class VideoItem: MediaItem {
     /**
      Generate thumbnail for a video asynchronously(but change observed state in main thread).
      */
-    func genThumbnail() async {
+    override func genThumbnail() async {
         DispatchQueue.main.async {  // Force updating in main thread as it's a state related to UI in case task started in background.
             self.loadingThumb = true
         }
@@ -140,6 +172,44 @@ class VideoItem: Identifiable, Hashable, ObservableObject {
             } catch {
                 print("Some error occurs while generating thumbnail of url \(self.url): \(error)")
             }
+        }
+    }
+}
+
+
+/// Factory to create media item based on file extension.
+///
+class MediaFactory {
+    static func mediaType(_ url: URL) -> UTType {
+        guard let type = UTType(filenameExtension: url.pathExtension) else { return .data }
+        if type.conforms(to: .movie) {
+            return .movie
+        } else if type.conforms(to: .image) {
+            return .image
+        }
+        return .data
+    }
+    static func mimeType(_ ext: String) -> String {
+        guard
+            let utType = UTType(filenameExtension: ext),
+            let mime = utType.preferredMIMEType
+        else { return "application/octet-stream" }
+        return mime
+    }
+    static func mimeType(_ url: URL) -> String {
+        return mimeType(url.pathExtension)
+    }
+    static func createMedia(from path: String) -> MediaItem {
+        return createMedia(from: URL(fileURLWithPath: path))
+    }
+    static func createMedia(from url: URL) -> MediaItem {
+        switch (mediaType(url)) {
+        case .movie:
+            return VideoItem(from: url)
+        case .image:
+            return ImageItem(from: url)
+        default:
+            return MediaItem(from: url)
         }
     }
 }

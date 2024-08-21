@@ -20,8 +20,8 @@ struct SidebarMenuGroups: Identifiable, Hashable {
 }
 
 struct ContentView: View {
-    @StateObject var videosViewModel: VideosViewModel = VideosViewModel()
-    @StateObject var selectionModel: SelectionModel<VideoItem> = SelectionModel<VideoItem>()
+    @StateObject var mediaViewModel: MediaViewModel = MediaViewModel()
+    @StateObject var selectionModel: SelectionModel<MediaItem> = SelectionModel<MediaItem>()
     @StateObject var appViewModel: AppViewModel = AppViewModel()
     @StateObject var uploadManger: UploadManager = UploadManager.shared
     @State var selectedView: SidebarMenuItem?
@@ -77,7 +77,7 @@ struct ContentView: View {
             }
             .animation(.easeInOut(duration: 0.3), value: appViewModel.showRightPanel)
         }
-        .environmentObject(videosViewModel)
+        .environmentObject(mediaViewModel)
         .environmentObject(selectionModel)
         .environmentObject(appViewModel)
         .environmentObject(uploadManger)

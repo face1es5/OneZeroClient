@@ -9,24 +9,22 @@ import SwiftUI
 import AVKit
 
 struct MediaPreview: View {
-    var media: VideoItem
+    var media: MediaItem
     var body: some View {
         VStack {
             Text("\(media.name)").font(.title2)
             Label("\(media.url.urlDecode())", systemImage: "network")
-            media.thumbnail
-        }
-        .padding()
-    }
-}
+            if media is ImageItem {
+                media.thumbnail?
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 500, height: 500)
+            } else if media is VideoItem {
+                VideoPlayer(player: AVPlayer(url: media.url))
+                    .frame(width: 500, height: 500)
+                    .aspectRatio(contentMode: .fit)
+            }
 
-struct VideoPreview: View {
-    var video: VideoItem
-    var body: some View {
-        VStack {
-            Text("\(video.name)").font(.title2)
-            Label("\(video.url.urlDecode())", systemImage: "network")
-            VideoPlayer(player: AVPlayer(url: video.url))
         }
         .padding()
     }
@@ -34,6 +32,6 @@ struct VideoPreview: View {
 
 struct MediaPreview_Previews: PreviewProvider {
     static var previews: some View {
-        MediaPreview(media: VideoItem(from: ""))
+        MediaPreview(media: MediaItem(from: ""))
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct VideoFrameKey: PreferenceKey {
+struct MediaFrameKey: PreferenceKey {
     static var defaultValue: [UUID: CGRect] = [:]
     
     static func reduce(value: inout [UUID: CGRect], nextValue: () -> [UUID: CGRect]) {
@@ -17,12 +17,12 @@ struct VideoFrameKey: PreferenceKey {
 }
 
 struct UploadView: View {
-    @EnvironmentObject var videosViewModel: VideosViewModel
-    @EnvironmentObject var selectionModel: SelectionModel<VideoItem>
+    @EnvironmentObject var mediaViewModel: MediaViewModel
+    @EnvironmentObject var selectionModel: SelectionModel<MediaItem>
     @EnvironmentObject var appViewModel: AppViewModel
     @State var selectionRect: CGRect = .zero
     @State var isSelecting: Bool = false
-    @State private var videoFrames: [UUID: CGRect] = [:]
+    @State private var mediaFrames: [UUID: CGRect] = [:]
     @State private var baseOffset: CGRect?
 
     var body: some View {
@@ -35,8 +35,8 @@ struct UploadView: View {
                 .opacity(isSelecting ? 1 : 0)
                 .zIndex(1)
             ScrollView {
-                VideoGalleryView()
-                    .navigationTitle("Upload videos")
+                MediaGalleryView()
+                    .navigationTitle("Upload items")
                     .toolbar {
                         ToolbarItemGroup(placement: .automatic) {
                             Button(action: { // select files.
@@ -44,14 +44,14 @@ struct UploadView: View {
                                 panel.allowsMultipleSelection = true
                                 panel.canChooseFiles = true
                                 panel.canChooseDirectories = false
-                                panel.allowedContentTypes = [UTType.video, UTType.movie, UTType.avi]
+                                panel.allowedContentTypes = [UTType.video, UTType.movie, UTType.avi, UTType.image, UTType.png, UTType.jpeg, UTType.gif]
                                 if panel.runModal() == .OK {
-                                    videosViewModel.load(from: panel.urls)
+                                    mediaViewModel.load(from: panel.urls)
                                 }
                             }) {
                                 Image(systemName: "photo.on.rectangle")
                             }
-                            .help("Select videos to upload")
+                            .help("Select items to upload")
                             .keyboardShortcut("i", modifiers: .command)
                             
                             Button(action: {
@@ -61,14 +61,14 @@ struct UploadView: View {
                             }) {
                                 Image(systemName: "square.and.arrow.up")
                             }
-                            .help("Upload selected videos")
+                            .help("Upload selected items")
                             .disabled(selectionModel.hasSelection ? false : true)
                             .keyboardShortcut("u", modifiers: .command)
                             
                             Button(action: { withAnimation { appViewModel.showRightPanel.toggle() } }) {
-                                Label("Show/Hide right panel", systemImage: "sidebar.right")
+                                Label("Show or Hide right panel", systemImage: "sidebar.right")
                             }
-                            .help("Show/Hide right panel")
+                            .help("Show or Hide right panel")
                             .keyboardShortcut("s", modifiers: .command)
                         }
                     }
@@ -132,22 +132,22 @@ struct UploadView: View {
                                             isSelecting = false
                                             let basePoint = CGPoint(x: 220, y: 52)
                                             var realRect = selectionRect
-                                            // selectionRect is relative to gallery view, but videoFrame is global, so we need to make selectionRect's coord global.
+                                            // selectionRect is relative to gallery view, but mediaFrame is global, so we need to make selectionRect's coord global.
                                             realRect.origin = CGPoint(
                                                 x: realRect.minX + basePoint.x,
                                                 y: realRect.minY + basePoint.y
                                             )
 //                                            print("------\nreal rect: \(realRect)")
                                             // deselect previous selection and select current selection.
-                                            for video in selectionModel.selectedItems {
-                                                video.isSelected.toggle()
+                                            for item in selectionModel.selectedItems {
+                                                item.isSelected.toggle()
                                             }
-                                            var selectedVideos: [VideoItem] = []
-                                            for (id, frame) in videoFrames {
+                                            var selectedItems: [MediaItem] = []
+                                            for (id, frame) in mediaFrames {
                                                 if realRect.intersects(frame) {
-                                                    if let video = videosViewModel.filteredMedia.first(where: { $0.id == id }) {
-                                                        video.isSelected = true
-                                                        selectedVideos.append(video)
+                                                    if let item = mediaViewModel.filteredMedia.first(where: { $0.id == id }) {
+                                                        item.isSelected = true
+                                                        selectedItems.append(item)
 //                                                        if !video.isSelected {
 //                                                            print("selected video: \(video.name), \(frame.origin)")
 //                                                            selectionModel.select(video)
@@ -156,28 +156,28 @@ struct UploadView: View {
                                                     }
                                                 }
                                             }
-                                            selectionModel.select(selectedVideos)
+                                            selectionModel.select(selectedItems)
 //                                            print("------\n")
                                         }
                                 )
                         }
                     )
-                    .onPreferenceChange(VideoFrameKey.self) { preferences in
-                        videoFrames = preferences
+                    .onPreferenceChange(MediaFrameKey.self) { preferences in
+                        mediaFrames = preferences
                     }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .contextMenu {
             Button("Select all") {
-                videosViewModel.selectAll()
+                mediaViewModel.selectAll()
             }
             .keyboardShortcut("a")
             Button("Deselect all") {
-                videosViewModel.deSelectAll()
+                mediaViewModel.deSelectAll()
             }
             Button("Clear all items") {
-                videosViewModel.clear()
+                mediaViewModel.clear()
             }
         }
         .background(
@@ -191,7 +191,7 @@ struct UploadView: View {
     }
 
     func upload() async {
-        if !selectionModel.hasSelection { print("No videos selected."); return }
+        if !selectionModel.hasSelection { print("No item selected."); return }
         UploadManager.shared.uploadRequest(for: selectionModel.selectedItems, to: "api/upload")
     }
 }

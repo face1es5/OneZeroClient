@@ -9,7 +9,7 @@ import SwiftUI
 
 /// View for mininum task.
 struct TaskUnitView: View {
-    @ObservedObject var taskItem: VideoItem
+    @ObservedObject var taskItem: MediaItem
     @State var showPopover: Bool = false
     var body: some View {
         HStack {
@@ -81,8 +81,8 @@ struct TaskGroupPreview: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(0)
                 
-                ForEach(taskGroup.videos) { video in
-                    TaskUnitView(taskItem: video)
+                ForEach(taskGroup.mediaItems) { media in
+                    TaskUnitView(taskItem: media)
                 }
             }
         }

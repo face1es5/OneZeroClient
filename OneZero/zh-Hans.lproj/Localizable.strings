@@ -6,19 +6,19 @@
   
 */
 
-"Upload selected videos" = "上传选中的视频";
+"Upload selected items" = "上传选中的项目";
 "Gallery" = "画廊";
 "Gallery_title" = "画廊集";
 "Administrator" = "管理员";
 "Upload" = "上传";
-"Upload videos" = "上传视频";
-"Select videos to upload" = "选择要上传的视频";
+"Upload items" = "上传";
+"Select items to upload" = "选择要上传的项目";
 "meta" = "元数据";
 "Duration(secs)" = "时长(秒)";
 "Resolution" = "分辨率";
 "Creation date" = "创建日期";
 "Not available" = "不可用";
-"Please select a video to show detail info." = "请选择视频来显示详细信息.";
+"Please select a item to show detail info." = "请选中项目以展示详细信息.";
 "Size" = "大小";
 "Full path" = "绝对路径";
 "Media detail" = "媒体详情";
@@ -31,16 +31,16 @@
 "Clear all items" = "清空所有项目";
 "Preview" = "预览";
 "Refresh thumbnail" = "刷新缩略图";
-"Show/Hide right panel" = "展开/隐藏右边栏";
+"Show or Hide right panel" = "展开或隐藏右边栏";
 "Quit" = "退出";
-"Upload videos from clipboard" = "从剪切板上传视频";
+"Upload media from clipboard" = "从剪切板上传视频/图片";
 "Tasks queue" = "任务队列";
 "No task." = "无任务.";
-"No video selected." = "当前无选中多媒体.";
+"No item selected." = "当前无选中项目.";
 "Description" = "描述";
 "No uploading task." = "当前无上传任务.";
 "Title:" = "标题:";
-"Video title:" = "视频标题:";
+"Media title:" = "名称:";
 "Description:" = "描述:";
 "Finished num" = "已完成个数";
 "Failed num" = "失败个数";
