@@ -20,10 +20,7 @@ struct SidebarMenuGroups: Identifiable, Hashable {
 }
 
 struct ContentView: View {
-    @StateObject var mediaViewModel: MediaViewModel = MediaViewModel()
-    @StateObject var selectionModel: SelectionModel<MediaItem> = SelectionModel<MediaItem>()
-    @StateObject var appViewModel: AppViewModel = AppViewModel()
-    @StateObject var uploadManger: UploadManager = UploadManager.shared
+    @EnvironmentObject var appViewModel: AppViewModel
     @State var selectedView: SidebarMenuItem?
     
     let sideBarGroups = [
@@ -77,10 +74,6 @@ struct ContentView: View {
             }
             .animation(.easeInOut(duration: 0.3), value: appViewModel.showRightPanel)
         }
-        .environmentObject(mediaViewModel)
-        .environmentObject(selectionModel)
-        .environmentObject(appViewModel)
-        .environmentObject(uploadManger)
     }
 }
 

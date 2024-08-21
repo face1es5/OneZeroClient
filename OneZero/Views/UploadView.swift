@@ -54,16 +54,17 @@ struct UploadView: View {
                             .help("Select items to upload")
                             .keyboardShortcut("i", modifiers: .command)
                             
-                            Button(action: {
-                                Task {
-                                    await upload()
-                                }
-                            }) {
-                                Image(systemName: "square.and.arrow.up")
-                            }
-                            .help("Upload selected items")
-                            .disabled(selectionModel.hasSelection ? false : true)
-                            .keyboardShortcut("u", modifiers: .command)
+//                            Button(action: {
+//                                Task {
+//                                    await upload()
+//                                }
+//                            }) {
+//                                Image(systemName: "square.and.arrow.up")
+//                            }
+//                            .help("Upload selected items")
+//                            .disabled(selectionModel.hasSelection == false)
+//                            .keyboardShortcut("u", modifiers: .command)
+                            Workshop()
                             
                             Button(action: { withAnimation { appViewModel.showRightPanel.toggle() } }) {
                                 Label("Show or Hide right panel", systemImage: "sidebar.right")
@@ -169,6 +170,11 @@ struct UploadView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .contextMenu {
+            Button("Upload selected items") {
+                Task.detached { await upload() }
+            }
+            .disabled(selectionModel.hasSelection == false)
+            Divider()
             Button("Select all") {
                 mediaViewModel.selectAll()
             }
@@ -176,6 +182,7 @@ struct UploadView: View {
             Button("Deselect all") {
                 mediaViewModel.deSelectAll()
             }
+            Divider()
             Button("Clear all items") {
                 mediaViewModel.clear()
             }

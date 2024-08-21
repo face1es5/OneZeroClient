@@ -70,6 +70,7 @@ class Uploader {
         return await upload(for: media, to: serverPath)
     }
     
+    
     /**
      Upload media in paths **to** serverPath in parallel.
      */
@@ -85,7 +86,7 @@ class Uploader {
 /// Class that holds a group of related tasks(like uploading some media from a range selection).
 class UploadTaskGroup: Identifiable, ObservableObject {
     let id = UUID().uuidString
-    let name: String
+    var name: String
     @Published var mediaItems: [MediaItem]
     let destination: String
     @Published var isPaused = false
@@ -154,16 +155,25 @@ class UploadManager: ObservableObject {
         processing()
     }
     
-    func uploadRequest(for mediaItem: MediaItem, to path: String) {
-        addTaskGroup(UploadTaskGroup(mediaItems: [mediaItem], destination: path))
-    }
+    /// Upload media items, add task group.
     func uploadRequest(for mediaItems: [MediaItem], to path: String) {
         addTaskGroup(UploadTaskGroup(mediaItems: mediaItems, destination: path))
     }
+    /// Upload a set of items and with a group name(usually after uploading workshop).
+    func uploadRequest(for mediaItems: Set<MediaItem>, to path: String, groupName: String) {
+        let taskGroup = UploadTaskGroup(mediaItems: Array(mediaItems), destination: path)
+        taskGroup.name = groupName
+        addTaskGroup(taskGroup)
+    }
+    /// Upload one media item, wrapper for [mediaItem]
+    func uploadRequest(for mediaItem: MediaItem, to path: String) {
+        uploadRequest(for: [mediaItem], to: path)
+    }
+    /// Upload a set of items, wrapper for Array(Set<MediaItem>)
     func uploadRequest(for mediaItems: Set<MediaItem>, to path: String) {
         uploadRequest(for: Array(mediaItems), to: path)
     }
-    
+
     func addTaskGroup(_ group: UploadTaskGroup) {
         // lock when new group append
         condition.lock()

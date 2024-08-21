@@ -22,10 +22,6 @@ struct AppStatusMenuView: View {
         }.keyboardShortcut("q")
     }
     
-    /**
-
-     
-     */
     /// Upload from Clipboard(or, Pasteboard in apple style?).
     /// Normally, upload the most recently copied file to server.
     /// At the time of writing these words, only supports video file like mp4/avi/mkv/mov.
@@ -33,7 +29,6 @@ struct AppStatusMenuView: View {
     /// Now, support any file(maybe, mainly for video&image).
     func uploadByPasteboard() async {
         if let files = NSPasteboard.general.propertyList(forType: NSPasteboard.PasteboardType("NSFilenamesPboardType")) as? [String] {
-//            print(files)
             let filesToUpload = files.filter{
                 supportedFormats.contains(($0 as NSString).pathExtension)
             }

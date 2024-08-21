@@ -10,6 +10,9 @@ import Foundation
 class SelectionModel<T: Hashable>: ObservableObject, Sequence {
     @Published var selectedItems: Set<T> = []
     @Published var selectedItem: T? = nil
+    var itemsArray: [T] {
+        Array(selectedItems)
+    }
     var count: Int {
         selectedItems.count
     }

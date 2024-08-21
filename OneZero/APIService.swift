@@ -92,6 +92,37 @@ class APIService {
             return .failure(error)
         }
     }
+    
+    /// Post serialized json data of object.
+    func json<T: Encodable>(_ object: T) async -> Result<String, Error> {
+        guard let url = URL(string: addr) else { return .failure(APIError.invalidURL) }
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        guard
+            let body = try? JSONEncoder().encode(object)
+        else {
+            return .failure(APIError.encondingError("Encode type of \(type(of: object)) failed."))
+        }
+        req.httpBody = body
+        do {
+            let (data, response) = try await URLSession.shared.data(for: req)
+            guard
+                let httpResponse = response as? HTTPURLResponse,
+                (200...299) ~= httpResponse.statusCode
+            else {
+                return .failure(APIError.invalidResponseCode((response as? HTTPURLResponse)?.statusCode ?? 500))
+            }
+            guard let message = String(data: data, encoding: .utf8) else {
+                return .failure(APIError.corruptData)
+            }
+            return .success(message)
+        } catch let urlError as URLError {
+            return .failure(APIError.urlError(urlError.localizedDescription))
+        } catch {
+            return .failure(error)
+        }
+    }
 }
 
 enum APIError: Error, LocalizedError {
@@ -102,6 +133,7 @@ enum APIError: Error, LocalizedError {
     case dataTaskError(String)
     case corruptData
     case decodingError(String)
+    case encondingError(String)
 
     var errorDescription: String? {
         switch self {
@@ -118,6 +150,8 @@ enum APIError: Error, LocalizedError {
         case let .decodingError(string):
             return string
         case let .urlError(string):
+            return string
+        case let .encondingError(string):
             return string
         }
     }

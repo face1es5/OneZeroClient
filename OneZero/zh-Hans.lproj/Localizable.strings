@@ -6,6 +6,16 @@
   
 */
 
+"Title: " = "标题: ";
+"Confirm" = "确定";
+"Submit" = "提交";
+"Cancel" = "取消";
+"Upload workshop" = "上传作品信息";
+"Uploading workshop..." = "上传作品信息中...";
+"Upload workshop failed." = "上传作品信息失败.";
+"Upload workshop success." = "上传作品信息成功.";
+"Upload extra files" = "上传其余文件";
+"Description: " = "描述: ";
 "Upload selected items" = "上传选中的项目";
 "Gallery" = "画廊";
 "Gallery_title" = "画廊集";

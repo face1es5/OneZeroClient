@@ -61,6 +61,10 @@ class MediaViewModel: ObservableObject {
         }
     }
     
+    func load(from items: [MediaItem]) {
+        someMedia = items
+    }
+    
     func load(from urls: [URL]) {
         someMedia = urls.map { MediaFactory.createMedia(from: $0) }
     }
