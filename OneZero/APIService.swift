@@ -49,7 +49,8 @@ class APIService {
         }
     }
 
-    func postMedia(for mediaData: Data, name filename: String, extension suffix: String) async -> Result<String, Error> {
+    /// Post media data server.
+    func postMediaData(for mediaData: Data, name filename: String, extension suffix: String) async -> Result<String, Error> {
         guard let url = URL(string: addr) else {
             return .failure(APIError.invalidURL)
         }

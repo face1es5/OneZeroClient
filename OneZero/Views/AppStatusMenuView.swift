@@ -16,7 +16,14 @@ struct AppStatusMenuView: View {
             }
         }
         .keyboardShortcut("v")
+        Button("Settings") {
+            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        }
+        .keyboardShortcut(",")
         Divider()
+        Button("About") {
+            NSApp.orderFrontStandardAboutPanel()
+        }
         Button("Quit") {
             NSApplication.shared.terminate(nil)
         }.keyboardShortcut("q")

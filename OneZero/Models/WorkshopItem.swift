@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct WorkshopItem: Encodable, Decodable {
+struct WorkshopItem: Codable {
     var id: String
     let title: String
     let description: String
-    let media: [String]
+    let media: [MediaRecord]
 }

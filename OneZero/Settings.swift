@@ -16,6 +16,7 @@ enum AppTheme: String, CaseIterable, Identifiable {
 struct GeneralSettingsView: View {
     @AppStorage("theme") var theme: AppTheme = .system
     @AppStorage("api") var baseURL: String = ""
+    @AppStorage("cloudURL") var cloudURL: String = ""
     var body: some View {
         Form {
             Picker("Appearance:", selection: $theme) {
@@ -23,8 +24,9 @@ struct GeneralSettingsView: View {
                 Text("Light").tag(AppTheme.light)
                 Text("Dark").tag(AppTheme.dark)
             }
-            .aspectRatio(contentMode: .fit)
+            .frame(maxWidth: 200)
             TextField("Server:", text: $baseURL)
+            TextField("Cloud Storage:", text: $cloudURL)
         }
         .padding()
         .frame(width: 350, height: 100)

@@ -49,6 +49,7 @@ struct SubmitFormView: View {
     @State var errorInfo: String = ""
     @State var uploadingInfo: Bool = false
     var baseURL = UserDefaults.standard.string(forKey: "api") ?? "what://"
+    var cloudURL = UserDefaults.standard.string(forKey: "cloudURL") ?? "what://"
     
     var body: some View {
         VStack {
@@ -73,11 +74,12 @@ struct SubmitFormView: View {
                                 uploadingInfo = true
                                 print("Try to post workshop info.")
                                 Task.detached {
-                                    let res = await APIService(to: "\(baseURL)/api/workshop")
-                                                    .json(
-                                                        WorkshopItem(id: UUID().uuidString, title: title, description: description,
-                                                                     media: selectionModel.selectedItems.map { $0.name })
-                                                        )
+                                    let media = await MainActor.run {
+                                        return selectionModel.selectedItems.map {
+                                            MediaRecord(id: UUID().uuidString, name: $0.name, description: $0.description, url: "\(cloudURL)/\($0.name)", type: $0 is VideoItem ? "video" : "image")
+                                        }
+                                    }
+                                    let res = await APIService(to: "\(baseURL)/workshop").json(WorkshopItem(id: UUID().uuidString, title: title, description: description, media: media))
                                     switch res {
                                     case .success(let message):
                                         await MainActor.run {

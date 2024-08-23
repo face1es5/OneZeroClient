@@ -8,8 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		CF000F0C2C74BEC3004019BF /* TaskGroupPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF000F0B2C74BEC3004019BF /* TaskGroupPreview.swift */; };
+		CF05B9702C77D9A300E3A84E /* MediaRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF05B96F2C77D9A300E3A84E /* MediaRecord.swift */; };
 		CF0602CF2C7118AF00265292 /* MediaGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0602CE2C7118AF00265292 /* MediaGalleryView.swift */; };
 		CF0917032C7528EB00E42E1D /* MediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0917022C7528EB00E42E1D /* MediaItem.swift */; };
+		CF0FE2A22C78A0E00006A273 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = CF0FE2A12C78A0E00006A273 /* Credits.rtf */; };
 		CF3F6A372C67AA65007079E8 /* UploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3F6A362C67AA65007079E8 /* UploadView.swift */; };
 		CF3F6A392C67AC6B007079E8 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3F6A382C67AC6B007079E8 /* GalleryView.swift */; };
 		CF41EDBB2C721D3000A07A59 /* MediaPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF41EDBA2C721D3000A07A59 /* MediaPreview.swift */; };
@@ -39,8 +41,10 @@
 
 /* Begin PBXFileReference section */
 		CF000F0B2C74BEC3004019BF /* TaskGroupPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskGroupPreview.swift; sourceTree = "<group>"; };
+		CF05B96F2C77D9A300E3A84E /* MediaRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaRecord.swift; sourceTree = "<group>"; };
 		CF0602CE2C7118AF00265292 /* MediaGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaGalleryView.swift; sourceTree = "<group>"; };
 		CF0917022C7528EB00E42E1D /* MediaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaItem.swift; sourceTree = "<group>"; };
+		CF0FE2A12C78A0E00006A273 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		CF1CF3942C6C720B00D689D0 /* OneZeroDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneZeroDebug.entitlements; sourceTree = "<group>"; };
 		CF3F6A362C67AA65007079E8 /* UploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadView.swift; sourceTree = "<group>"; };
 		CF3F6A382C67AC6B007079E8 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
@@ -139,18 +143,19 @@
 		CFDD8D732C64FA1A0048D9F5 /* OneZero */ = {
 			isa = PBXGroup;
 			children = (
-				CFE227852C6E55190081B1A7 /* zh-Hans.lproj */,
-				CFE688A82C6DF4DD0081B70E /* Extension */,
 				CF44EB912C6CEED8008F461E /* Info.plist */,
 				CF1CF3942C6C720B00D689D0 /* OneZeroDebug.entitlements */,
 				CFDD8D7D2C64FA1B0048D9F5 /* OneZero.entitlements */,
+				CFE227852C6E55190081B1A7 /* zh-Hans.lproj */,
+				CF0FE2A12C78A0E00006A273 /* Credits.rtf */,
+				CFDD8D782C64FA1B0048D9F5 /* Assets.xcassets */,
+				CFDD8D7A2C64FA1B0048D9F5 /* Preview Content */,
+				CFE688A82C6DF4DD0081B70E /* Extension */,
 				CF0602CD2C71187100265292 /* Views */,
 				CFE290D12C6C879500CA3B25 /* Models */,
 				CFDD8D742C64FA1A0048D9F5 /* OneZeroApp.swift */,
 				CFE12C292C6BC08300966529 /* APIService.swift */,
 				CF4449062C6B63B900191EF1 /* Settings.swift */,
-				CFDD8D782C64FA1B0048D9F5 /* Assets.xcassets */,
-				CFDD8D7A2C64FA1B0048D9F5 /* Preview Content */,
 			);
 			path = OneZero;
 			sourceTree = "<group>";
@@ -197,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				CFE6C4752C75E6F200B1AD52 /* Workshop.swift */,
+				CF05B96F2C77D9A300E3A84E /* MediaRecord.swift */,
 			);
 			path = Transaction;
 			sourceTree = "<group>";
@@ -260,6 +266,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF0FE2A22C78A0E00006A273 /* Credits.rtf in Resources */,
 				CFDD8D7C2C64FA1B0048D9F5 /* Preview Assets.xcassets in Resources */,
 				CFE227882C6E55350081B1A7 /* Localizable.strings in Resources */,
 				CFDD8D842C64FA5B0048D9F5 /* .gitignore in Resources */,
@@ -295,6 +302,7 @@
 				CF68C29F2C6C885A00FF05BF /* MediaViewModel.swift in Sources */,
 				CFE290D02C6C857000CA3B25 /* MediaThumbView.swift in Sources */,
 				CF44EB932C6D16E9008F461E /* SelectionModel.swift in Sources */,
+				CF05B9702C77D9A300E3A84E /* MediaRecord.swift in Sources */,
 				CF3F6A372C67AA65007079E8 /* UploadView.swift in Sources */,
 				CFE12C2A2C6BC08300966529 /* APIService.swift in Sources */,
 				CF4449072C6B63B900191EF1 /* Settings.swift in Sources */,

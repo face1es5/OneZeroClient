@@ -15,6 +15,7 @@ import Foundation
 class Uploader {
     static let shared = Uploader()
     private var baseURL = UserDefaults.standard.string(forKey: "api") ?? "what://"
+    private var cloudStorageURL = UserDefaults.standard.string(forKey: "cloudURL") ?? "what://"
     
     private init() {}
     
@@ -23,7 +24,7 @@ class Uploader {
      Return true if success, false if failed.
      */
     func upload(for media: MediaItem, to path: String) async -> Bool {
-        let url = "\(baseURL)/\(path)"
+        let url = "\(cloudStorageURL)/\(path)"
         await MainActor.run {
             media.uploading = true
         }
@@ -42,7 +43,7 @@ class Uploader {
             return false
         }
         print("Ready to post \(media.name) on \(url)")
-        let result = await APIService(to: url).postMedia(for: data, name: media.name, extension: media.url.pathExtension)
+        let result = await APIService(to: url).postMediaData(for: data, name: media.name, extension: media.url.pathExtension)
         switch result {
         case let .success(message):
             await MainActor.run { media.failedToUploading = false }
