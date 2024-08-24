@@ -13,75 +13,81 @@ struct GalleryView: View {
     @StateObject var page: Page = .first()
     @EnvironmentObject var commenSettings: CommonSettings
     @AppStorage("numPerPage") var numPerPage: Int = 5
-    @State var pageIndexes: [Int] = []
-    @State var filteredPageIndexes: [Int] = []
-    @State var searchString: String = ""
-    @State var categoryFilter: WorkCategory = .all
+    @StateObject var pagesViewModel = PagesViewModel()
+    @State var num: Int = 0
     var body: some View {
         GeometryReader { proxy in
-            Pager(page: page, data: pageIndexes, id: \.self) { pageIndex in
-                GalleryPageView(
-                    searchString: $searchString, categoryFilter: $categoryFilter,
-                    page: page, pageIndex: pageIndex, numPerPage: numPerPage, pageSize: pageIndexes.count
-                )
+            ZStack(alignment: .bottom) {
+                Pager(page: page, data: Array(0..<pagesViewModel.totalPageNum), id: \.self) { pageIndex in
+                    GalleryPageView(
+                        pageIndex: pageIndex, numPerPage: numPerPage
+                    )
+                }
+                .alignment(.start)
+                #if os(macOS)
+                .disableDragging()
+                #endif
+                .itemSpacing(20)
+                .frame(width: proxy.size.width, height: proxy.size.height)
+                PageController(page: page, currentPage: $pagesViewModel.currentPage, pageSize: pagesViewModel.totalPageNum)
+                    .padding()
+                    .frame(alignment: .bottom)
             }
-            .alignment(.start)
-            .itemSpacing(20)
-            .frame(width: proxy.size.width, height: proxy.size.height)
+        }
+        .environmentObject(pagesViewModel)
+        .frame(maxWidth: .infinity)
+        .task {
+            pagesViewModel.totalPageNum = await queryPageSize()
         }
         .toolbar {
-            ToolbarItem {
-                Picker("Category:", selection: $categoryFilter) {
+            ToolbarItemGroup {
+                Picker("Category:", selection: $pagesViewModel.categoryFilter) {
                     ForEach(WorkCategory.allCases) { cate in
                         Text(cate.localizedString)
                     }
                 }
-                .pickerStyle(.menu)
             }
         }
-        .searchable(text: $searchString, prompt: Text("Search..."))
-        .frame(maxWidth: .infinity)
-        .task {
-            let pageRange = await getPageRange()
-            pageIndexes = pageRange
+        .searchable(text: $pagesViewModel.searchString, prompt: Text("Search..."))
+        .onSubmit(of: .search) {
+            Task {
+                await doFilter()
+            }
         }
-        .onChange(of: categoryFilter) { cate in
+        .onChange(of: pagesViewModel.categoryFilter) { cate in
             print("new cate is: \(cate.rawValue)")
-            Task.detached(priority: .background) {
-                let pageRange =  await getPageRange()
-                DispatchQueue.main.async {
-                    pageIndexes = pageRange
-                }
-            }
-        }
-        .onChange(of: searchString) { _ in
-            Task.detached(priority: .background) {
-                let pageRange =  await getPageRange()
-                DispatchQueue.main.async {
-                    pageIndexes = pageRange
-                }
+            Task {
+                await doFilter()
             }
         }
     }
     
-    func getPageRange() async -> [Int] {
-        let pageSize = await queryPageSize()
-        return Array(0..<pageSize)
+    /// wrapper for queryPageSize, request page size from server and assign to pagesViewModel's totalPageNum
+    ///
+    /// Notice: although sometimes totalPageNum will not change after filter, but this operation still be treated as updating for viewmodel,
+    /// thus pages view will also update.
+    func doFilter() async {
+        let pageSize =  await Task.detached(priority:.background) {
+            return await queryPageSize()
+        }.value
+        await MainActor.run {
+            pagesViewModel.totalPageNum = pageSize
+            print("update page num to: \(pagesViewModel.totalPageNum)")
+        }
     }
     
     func queryPageSize() async -> Int {
         do {
             var api: String = "\(commenSettings.baseURL)/workshop/page/size?per=\(numPerPage)"
-            if searchString.count > 0 {
-                api += "&kw=\(searchString)"
+            if pagesViewModel.searchString.count > 0 {
+                api += "&kw=\(pagesViewModel.searchString)"
             }
-            if categoryFilter != .all {
-                api += "&category=\(categoryFilter.rawValue)"
+            if pagesViewModel.categoryFilter != .all {
+                api += "&category=\(pagesViewModel.categoryFilter.rawValue)"
             }
-            print("fetching page num on \(api)")
+            print("fetching page size on \(api)")
             let pageJson: PageJson = try await APIService(to: api).getJSON()
-            print("page num: \(pageJson.size)")
-//            pageIndexes = Array(0..<pageJson.size)
+            print("page size: \(pageJson.size)")
             return pageJson.size
         } catch {
             print("get page size failed: \(error)")

@@ -21,18 +21,4 @@ class WorkshopItem: Identifiable, ObservableObject {
         self.category = category
         self.mediaItems = mediaRecords.map { $0.toModel() }
     }
-    
-    func conform(kw: String, category: WorkCategory) -> Bool {
-        var res = true
-        if kw.count > 0 {
-            res = title.contains(kw) || description.contains(kw)
-        }
-        if !res {
-            return res
-        }
-        if category != .all {
-            res = self.category == category
-        }
-        return res
-    }
 }

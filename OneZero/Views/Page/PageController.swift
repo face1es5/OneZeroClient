@@ -10,12 +10,13 @@ import SwiftUIPager
 
 struct PageController: View {
     let page: Page
-    let pageIndex: Int
-    let pageSize: Int
+    @Binding var currentPage: Int
+    var pageSize: Int
     var body: some View {
         HStack {
             Spacer()
             Button(action: {
+                currentPage = 1
                 withAnimation {
                     page.update(.moveToFirst)
                 }
@@ -26,8 +27,9 @@ struct PageController: View {
                     Text("Start")
                         .font(.subheadline)
                 }
-            }).disabled(pageIndex <= 0)
+            }).disabled(currentPage <= 1)
             Button(action: {
+                currentPage -= 1
                 withAnimation {
                     page.update(.previous)
                 }
@@ -38,11 +40,12 @@ struct PageController: View {
                     Text("Previous")
                         .font(.subheadline)
                 }
-            }).disabled(pageIndex <= 0)
-            Text("\(pageIndex+1)")
+            }).disabled(currentPage <= 1)
+            Text("\(currentPage)")
                 .font(.title2)
                 .padding()
             Button(action: {
+                currentPage += 1
                 withAnimation {
                     page.update(.next)
                 }
@@ -53,8 +56,9 @@ struct PageController: View {
                     Text("Next")
                         .font(.subheadline)
                 }
-            }).disabled(pageIndex + 1 >= pageSize)
+            }).disabled(currentPage >= pageSize)
             Button(action: {
+                currentPage = pageSize
                 withAnimation {
                     page.update(.moveToLast)
                 }
@@ -65,7 +69,7 @@ struct PageController: View {
                     Text("End")
                         .font(.subheadline)
                 }
-            }).disabled(pageIndex + 1 >= pageSize)
+            }).disabled(currentPage >= pageSize)
             Spacer()
         }
     }

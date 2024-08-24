@@ -23,28 +23,6 @@ struct CollectionView: View {
             }
             .font(.title2)
             SubmitFormView(isPresented: $isPresented, pop: false)
-            // Fuck you, fucking disclosure group
-//            DisclosureGroup("info") {
-//                Form {
-//                    Field(key: "Total size", value: "\(totalSize)")
-//                        .onChange(of: selectionModel.selectedItems) { _ in
-//                            var size: Int64 = 0
-//                            for items in selectionModel.selectedItems {
-//                                size += items.meta.size
-//                            }
-//                            totalSize = size.formattedFileSize()
-//                        }
-//                }
-//                .frame(maxWidth: .infinity, alignment: .leading)
-//                .padding()
-//                .task {
-//                    var size: Int64 = 0
-//                    for items in selectionModel.selectedItems {
-//                        size += items.meta.size
-//                    }
-//                    totalSize = size.formattedFileSize()
-//                }
-//            }
         }
     }
     

@@ -10,46 +10,64 @@ import SwiftUIPager
 
 struct GalleryPageView: View {
     @EnvironmentObject var commonSettings: CommonSettings
-    @Binding var searchString: String
-    @Binding var categoryFilter: WorkCategory
-    let page: Page
+    @EnvironmentObject var pagesViewModel: PagesViewModel
     let pageIndex: Int
     let numPerPage: Int
-    let pageSize: Int
     @State var works: [WorkshopItem] = []
     var body: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 400))], spacing: 10) {
-                ForEach( works.filter{ $0.conform(kw: searchString, category: categoryFilter) } ) { work in
+                ForEach(works) { work in
                     WorkshopThumView(work: work)
                 }
             }
             .task {
-                works = await fetchingWorks()
+                await refresh()
             }
-            PageController(page: page, pageIndex: pageIndex, pageSize: pageSize)
-                .padding()
         }
-        .onChange(of: categoryFilter) { _ in
-            let ws = works.filter{ $0.conform(kw: searchString, category: categoryFilter) }
-            print(111)
+        .contextMenu {
+            Button("Refresh") {
+                Task {
+                    await refresh()
+                }
+            }
         }
-        
+        // have to observe filter manully as view is not related to these.
+        .onChange(of: pagesViewModel.categoryFilter) { _ in
+            Task {
+                await refresh()
+            }
+        }
+        .onChange(of: pagesViewModel.searchString) { _ in
+            Task { await refresh() }
+        }
     }
+    
+    private func refresh() async {
+        let new = await Task.detached(priority: .background) {
+            return await fetchingWorks()
+        }.value
+        
+        await MainActor.run {
+            works = new
+        }
+    }
+    
     private func fetchingWorks() async -> [WorkshopItem] {
         print("get page record")
         do {
+            let searchString = pagesViewModel.searchString
+            let cateFilter = pagesViewModel.categoryFilter
             var api: String = "\(commonSettings.baseURL)/workshop/?page=\(pageIndex+1)&per=\(numPerPage)"
             if searchString.count > 0 {
                 api += "&kw=\(searchString)"
             }
-            if categoryFilter != .all {
-                api += "&category=\(categoryFilter.rawValue)"
+            if cateFilter != .all {
+                api += "&category=\(cateFilter.rawValue)"
             }
-            let url = "\(commonSettings.baseURL)/workshop?page=\(pageIndex+1)&per=\(numPerPage)&kw=\(searchString)&category=\(categoryFilter.rawValue)"
-            print("fetching url: \(url)")
-            let workRecords: [WorkshopRecord] = try await APIService(to: url).getJSON() as [WorkshopRecord]
-            print("load page \(pageIndex) success")
+            print("fetching url: \(api)")
+            let workRecords: [WorkshopRecord] = try await APIService(to: api).getJSON() as [WorkshopRecord]
+//            print("load page \(pageIndex) success")
             return workRecords.map { $0.toModel() }
         } catch {
             print("error: \(error)")
