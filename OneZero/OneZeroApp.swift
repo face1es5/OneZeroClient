@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct OneZeroApp: App {
+    @StateObject var commonSettings: CommonSettings = CommonSettings()
     @AppStorage("theme") var theme: AppTheme = .system
     @StateObject var mediaViewModel: MediaViewModel = MediaViewModel()
     @StateObject var selectionModel: SelectionModel<MediaItem> = SelectionModel<MediaItem>()
@@ -24,6 +25,7 @@ struct OneZeroApp: App {
                 .environmentObject(selectionModel)
                 .environmentObject(appViewModel)
                 .environmentObject(uploadManger)
+                .environmentObject(commonSettings)
         }
         #if os(macOS)
             MenuBarExtra("App Menu Bar Extra", systemImage: "camera.aperture") {

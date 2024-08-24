@@ -6,6 +6,17 @@
   
 */
 
+"Common" = "通用";
+"All" = "全部";
+"Wedding" = "婚礼";
+"Advocacy" = "政府宣传";
+"Interview" = "采访";
+"Advertising" = "商务推广";
+"Category:" = "分类:";
+"Category: " = "分类: ";
+"Photographic tidbits" = "摄影花絮";
+"Phogallery" = "花絮";
+"Search..." = "搜索...";
 "Title: " = "标题: ";
 "Confirm" = "确定";
 "Submit" = "提交";
@@ -18,7 +29,7 @@
 "Description: " = "描述: ";
 "Upload selected items" = "上传选中的项目";
 "Gallery" = "画廊";
-"Gallery_title" = "画廊集";
+"Gallery title" = "画廊集";
 "Administrator" = "管理员";
 "Upload" = "上传";
 "Upload items" = "上传";

@@ -64,7 +64,7 @@ struct UploadView: View {
 //                            .help("Upload selected items")
 //                            .disabled(selectionModel.hasSelection == false)
 //                            .keyboardShortcut("u", modifiers: .command)
-                            Workshop()
+                            SubmitWorkButton()
                             
                             Button(action: { withAnimation { appViewModel.showRightPanel.toggle() } }) {
                                 Label("Show or Hide right panel", systemImage: "sidebar.right")

@@ -13,10 +13,18 @@ enum AppTheme: String, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
+class CommonSettings: ObservableObject {
+    @AppStorage("theme") var theme: AppTheme = .system
+    @AppStorage("api") var baseURL: String = ""
+    @AppStorage("cloudURL") var cloudURL: String = ""
+    @AppStorage("numPerPage") var numPerPage: Int = 5
+}
+
 struct GeneralSettingsView: View {
     @AppStorage("theme") var theme: AppTheme = .system
     @AppStorage("api") var baseURL: String = ""
     @AppStorage("cloudURL") var cloudURL: String = ""
+    @AppStorage("numPerPage") var numPerPage: Int = 5
     var body: some View {
         Form {
             Picker("Appearance:", selection: $theme) {
@@ -27,6 +35,9 @@ struct GeneralSettingsView: View {
             .frame(maxWidth: 200)
             TextField("Server:", text: $baseURL)
             TextField("Cloud Storage:", text: $cloudURL)
+            Stepper(value: $numPerPage, in: 3...10, step: 1) {
+                Text("Num per page to display: \(numPerPage)")
+            }
         }
         .padding()
         .frame(width: 350, height: 100)

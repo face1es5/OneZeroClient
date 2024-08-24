@@ -13,4 +13,8 @@ struct MediaRecord: Codable {
     let description: String
     let url: String
     let type: String
+    
+    func toModel() -> MediaItem {
+        return MediaFactory.createRemoteMedia(from: url)
+    }
 }

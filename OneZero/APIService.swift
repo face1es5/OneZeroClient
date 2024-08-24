@@ -14,7 +14,7 @@ class APIService {
     }
 
     func getJSON<T: Decodable>(dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate, keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy = .useDefaultKeys) async throws -> T {
-        guard let url = URL(string: addr) else { throw APIError.invalidURL }
+        guard let url = URL(string: addr.urlEncode()) else { throw APIError.invalidURL }
         do {
             let (data, response) = try await URLSession.shared.data(from: url)
             guard
@@ -95,7 +95,7 @@ class APIService {
     }
     
     /// Post serialized json data of object.
-    func json<T: Encodable>(_ object: T) async -> Result<String, Error> {
+    func postJson<T: Encodable>(_ object: T) async -> Result<String, Error> {
         guard let url = URL(string: addr) else { return .failure(APIError.invalidURL) }
         var req = URLRequest(url: url)
         req.httpMethod = "POST"

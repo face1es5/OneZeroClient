@@ -121,7 +121,6 @@ class UploadTaskGroup: Identifiable, ObservableObject {
     // start uploading asynchronously
     func start() {
         print("Upload group \(name)")
-        isStarted = true
         Task {
             await withTaskGroup(of: Void.self) { taskGroup in
                 for media in mediaItems {
@@ -218,6 +217,7 @@ class UploadManager: ObservableObject {
                 }
                 // here we should check status of group ( started? paused? finished? halted?)
                 print("Start group \(group.name)")
+                group.isStarted = true
                 group.start()
                 // TODO: handle pasuing/halting
                 condition.unlock()

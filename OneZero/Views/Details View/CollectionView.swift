@@ -11,9 +11,9 @@ import SwiftUI
 ///
 struct CollectionView: View {
     @EnvironmentObject var selectionModel: SelectionModel<MediaItem>
+    @EnvironmentObject var commonSettings: CommonSettings
     @State var totalSize: String = "Loading..."
-    @State var title: String = ""
-    @State var description: String = ""
+    @State var isPresented: Bool = false
     
     var body: some View {
         ScrollView {
@@ -22,32 +22,29 @@ struct CollectionView: View {
                 Text("\(selectionModel.count)")
             }
             .font(.title2)
-            Form {
-                TextField("Title:", text: $title)
-                TextField("Description:", text: $description, axis: .vertical)
-                    .lineLimit(10)
-            }
-            DisclosureGroup("info") {
-                Form {
-                    Field(key: "Total size", value: "\(totalSize)")
-                        .onChange(of: selectionModel.selectedItems) { _ in
-                            var size: Int64 = 0
-                            for items in selectionModel.selectedItems {
-                                size += items.meta.size
-                            }
-                            totalSize = size.formattedFileSize()
-                        }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-                .task {
-                    var size: Int64 = 0
-                    for items in selectionModel.selectedItems {
-                        size += items.meta.size
-                    }
-                    totalSize = size.formattedFileSize()
-                }
-            }
+            SubmitFormView(isPresented: $isPresented, pop: false)
+            // Fuck you, fucking disclosure group
+//            DisclosureGroup("info") {
+//                Form {
+//                    Field(key: "Total size", value: "\(totalSize)")
+//                        .onChange(of: selectionModel.selectedItems) { _ in
+//                            var size: Int64 = 0
+//                            for items in selectionModel.selectedItems {
+//                                size += items.meta.size
+//                            }
+//                            totalSize = size.formattedFileSize()
+//                        }
+//                }
+//                .frame(maxWidth: .infinity, alignment: .leading)
+//                .padding()
+//                .task {
+//                    var size: Int64 = 0
+//                    for items in selectionModel.selectedItems {
+//                        size += items.meta.size
+//                    }
+//                    totalSize = size.formattedFileSize()
+//                }
+//            }
         }
     }
     

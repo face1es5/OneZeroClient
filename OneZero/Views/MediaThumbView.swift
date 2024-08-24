@@ -86,7 +86,7 @@ struct MediaThumbView: View {
     
     func refreshThumbnail(_ force: Bool = false) {
         if media.thumbnail == nil || force {
-            Task { await media.genThumbnail() }
+            Task.detached { await media.genThumbnail() }
         }
     }
 }

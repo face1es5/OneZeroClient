@@ -120,6 +120,10 @@ class MediaItem: Identifiable, Hashable, ObservableObject, Equatable {
         fatalError("You must implement genThumbnail in sub class.")
     }
     
+    func toRecord(url: String) -> MediaRecord {
+        return .init(id: id.uuidString, name: name, description: description, url: url, type: self is VideoItem ? "video" : "image")
+    }
+    
 }
 
 /// Image item.
@@ -134,10 +138,14 @@ class ImageItem: MediaItem {
                 self.loadingThumb = false
             }
         }
-        guard let nsimg = NSImage(contentsOf: url) else {
-            print("Can't generating thumnail for image \(name) of url: \(url)")
-            return
-        }
+        let nsimg = await Task.detached(priority: .background) {
+            guard let img = NSImage(contentsOf: self.url) else {
+                print("Can't generating thumnail for image \(self.name) of url: \(self.url)")
+                return NSImage(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "error-img", ofType: "png")!))!
+            }
+            return img
+        }.value
+
         thumbnail = Image(nsImage: nsimg)
     }
 }
@@ -180,7 +188,8 @@ class VideoItem: MediaItem {
 /// Factory to create media item based on file extension.
 ///
 class MediaFactory {
-    static func mediaType(_ url: URL) -> UTType {
+    static func mediaType(_ url: URL?) -> UTType {
+        guard let url = url else { return .data }
         guard let type = UTType(filenameExtension: url.pathExtension) else { return .data }
         if type.conforms(to: .movie) {
             return .movie
@@ -199,8 +208,18 @@ class MediaFactory {
     static func mimeType(_ url: URL) -> String {
         return mimeType(url.pathExtension)
     }
+    /// Create media which is in local file system.
     static func createMedia(from path: String) -> MediaItem {
         return createMedia(from: URL(fileURLWithPath: path))
+    }
+    /// Create media on remote server.
+    static func createRemoteMedia(from path: String) -> MediaItem {
+        if let url = URL(string: path.urlEncode()) {
+            return createMedia(from: url)
+        } else {
+            print("Invalid url \(path)")
+            return createMedia(from: URL(fileURLWithPath: ""))
+        }
     }
     static func createMedia(from url: URL) -> MediaItem {
         switch (mediaType(url)) {

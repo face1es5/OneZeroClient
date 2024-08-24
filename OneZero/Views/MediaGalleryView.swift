@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// For upload.
 struct MediaGalleryView: View {
     @EnvironmentObject var mediaViewModel: MediaViewModel
     @EnvironmentObject var selectionModel: SelectionModel<MediaItem>

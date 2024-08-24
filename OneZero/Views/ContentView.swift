@@ -28,11 +28,11 @@ struct ContentView: View {
             SidebarMenuItem(name: "Upload", icon: "icloud.and.arrow.up")
         ]),
         SidebarMenuGroups(name: "1990.10.10", menus: [
-            SidebarMenuItem(name: "Gallery_title", icon: "photo.on.rectangle.angled")
+            SidebarMenuItem(name: "Gallery title", icon: "photo.on.rectangle.angled"),
+            SidebarMenuItem(name: "Photographic tidbits", icon: "camera.viewfinder")
         ])
     ]
-
-
+    
     var body: some View {
         NavigationSplitView {
             List(selection: $selectedView) {
@@ -53,26 +53,31 @@ struct ContentView: View {
                     switch selectedView.name {
                     case "Upload":
                         UploadView()
-                    case "Gallery_title":
+                        if appViewModel.showRightPanel {
+                            HStack {
+                                Divider()
+                                DetailsView()
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .transition(.move(edge: appViewModel.showRightPanel ? .trailing : .leading))
+                            .frame(maxWidth: 300)
+                        }
+                    case "Gallery title":
                         GalleryView()
+                            .navigationTitle("Gallery")
+                    case "Photographic tidbits":
+                        GalleryView()
+                            .navigationTitle("Phogallery")
                     default:
                         EmptyView()
                     }
-                } else {
-                    GalleryView()
-                }
-                if appViewModel.showRightPanel {
-                    HStack {
-                        Divider()
-                        DetailsView()
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                    }
-                    .transition(.move(edge: appViewModel.showRightPanel ? .trailing : .leading))
-                    .frame(maxWidth: 300)
                 }
             }
             .animation(.easeInOut(duration: 0.3), value: appViewModel.showRightPanel)
+        }
+        .onAppear {
+            selectedView = sideBarGroups[1].menus.first
         }
     }
 }
